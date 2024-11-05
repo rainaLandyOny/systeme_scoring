@@ -1,0 +1,8 @@
+{
+    "ENGINE": "django.db.backends.postgresql",
+    "NAME": "caisse_epargne",
+    "USER": "caisse_epargne",
+    "PASSWORD": "caisse_epargne",
+    "HOST": "localhost",
+    "PORT": "5432"
+}
