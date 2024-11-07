@@ -10,9 +10,9 @@ def login(request):
         if user is not None:
             login(request, user)
             if user.role == 'admin':
-                return redirect('admin_dashboard')
+                return redirect('admin_home')
             elif user.role == 'service_client':
-                return redirect('service_client_home')
+                return redirect('service_home')
             elif user.role == 'gestionnaire':
                 return redirect('gestionnaire_home')
         else:

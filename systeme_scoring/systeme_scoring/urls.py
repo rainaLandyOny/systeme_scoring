@@ -17,8 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from cemapp import views as baseviews
+from cemapp.role_views import admin_views, service_client_views, gestionnaire_demande_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('login/', baseviews.login, name='login'),
+    path('superuser/', admin.site.urls),
+    path('', baseviews.login, name='login'),
+    path('admin/', admin_views.admin_home, name='admin_home'),
+    path('gestionnairedemande/', gestionnaire_demande_views.gestionnaire_home, name='gestionnaire_home'),
+    path('serviceclient/', service_client_views.service_home, name='service_home'),
 ]
