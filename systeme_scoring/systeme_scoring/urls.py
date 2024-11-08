@@ -21,7 +21,7 @@ from cemapp.role_views import admin_views, service_client_views, gestionnaire_de
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
-    path('', baseviews.login, name='login'),
+    path('', baseviews.user_login, name='login'),
     path('admin/', admin_views.admin_home, name='admin_home'),
     path('gestionnairedemande/', gestionnaire_demande_views.gestionnaire_home, name='gestionnaire_home'),
     path('serviceclient/', service_client_views.service_home, name='service_home'),

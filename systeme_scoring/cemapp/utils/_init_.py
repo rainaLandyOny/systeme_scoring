@@ -1,0 +1,1 @@
+from role_checker import role_required
