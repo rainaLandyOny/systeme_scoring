@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 def user_login(request):
@@ -12,9 +12,13 @@ def user_login(request):
             if user.role == 'admin':
                 return redirect('admin_home')
             elif user.role == 'service_client':
-                return redirect('service_home')
+                return redirect('offre_credit')
             elif user.role == 'gestionnaire':
                 return redirect('gestionnaire_home')
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
     return render(request, 'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')

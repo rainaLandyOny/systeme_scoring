@@ -1,0 +1,129 @@
+/* Style général */
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+
+/* En-tête de la page */
+
+h1 {
+    font-size: 2em;
+    color: #003366;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+/* Section des détails */
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+}
+
+.details p {
+    margin: 8px 0;
+    font-size: 1em;
+    color: #666;
+}
+
+.details span {
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* Section des entrées de simulation */
+
+.simulation-inputs {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1em;
+    color: #003366;
+    margin-bottom: 5px;
+}
+
+input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background-color: #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: #ff6600;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background-color: #ff6600;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+span {
+    font-size: 0.9em;
+    color: #444;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+
+/* Résultat de la simulation */
+
+.simulation-result {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.simulation-result h2 {
+    font-size: 1.8em;
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+.simulation-result p {
+    font-size: 1.1em;
+    color: #666;
+}
+
+.simulation-result h3 {
+    font-size: 1.6em;
+    color: #ff6600;
+    margin-top: 15px;
+}
