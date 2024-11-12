@@ -1,6 +1,6 @@
 from django.db import models
-from models_classes.client import Client
-from models_classes.type_credit import TypeCredit
+from .client import Client
+from .type_credit import TypeCredit
 
 class DemandeCredit(models.Model):
     STATUT_CHOICES = [

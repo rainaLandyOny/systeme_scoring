@@ -1,5 +1,5 @@
 from django.db import models
-from models_classes.demande_credit import DemandeCredit
+from .demande_credit import DemandeCredit
 from datetime import date
 
 class EvaluationCredit(models.Model):

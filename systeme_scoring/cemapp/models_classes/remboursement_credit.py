@@ -1,5 +1,5 @@
 from django.db import models
-from models_classes.demande_credit import DemandeCredit
+from .demande_credit import DemandeCredit
 
 class RemboursementCredit(models.Model):
     demande_credit = models.ForeignKey(DemandeCredit, on_delete=models.CASCADE)

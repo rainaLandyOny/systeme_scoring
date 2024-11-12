@@ -1,7 +1,6 @@
 from django.db import models
 
 class Client(models.Model):
-    matricule = models.CharField(max_length=10, unique=True)
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
     date_naissance = models.DateField()
