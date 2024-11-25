@@ -1,0 +1,163 @@
+:root {
+    --main-red: #e50005;
+    --main-grey: #9fa0a2;
+    --main-light: #e3e4e6;
+    --sidebar-width: 250px;
+    --collapsed-width: 80px;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--main-light);
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100%;
+    background-color: var(--main-red);
+    color: white;
+    transition: width 0.3s ease;
+    border-top-right-radius: 10px;
+    /* Rounded corner for the top */
+    border-bottom-right-radius: 10px;
+    /* Rounded corner for the bottom */
+}
+
+.sidebar.collapsed {
+    width: var(--collapsed-width);
+}
+
+
+/* Sidebar Header */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: var(--main-red);
+    font-size: 1.5rem;
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-right-radius: 10px;
+    /* Ensures smooth corner at the top */
+}
+
+.logo {
+    border: 3px solid white;
+    border-radius: 10%;
+    /* Circular logo effect */
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.logo:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    /* Slight zoom effect */
+}
+
+.sidebar-title {
+    margin-left: 10px;
+    font-size: 1.2rem;
+}
+
+.sidebar.collapsed .sidebar-title {
+    display: none;
+}
+
+
+/* Navigation */
+
+nav {
+    margin-top: 20px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    /* Rounded corners for each menu item */
+    transition: background-color 0.3s, transform 0.2s ease;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Highlight effect */
+    transform: translateX(5px);
+    /* Slight slide effect on hover */
+}
+
+.nav-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.sidebar.collapsed .nav-text {
+    display: none;
+}
+
+
+/* Submenu (if applicable) */
+
+.nav-item .submenu {
+    display: none;
+    /* Hide submenu by default */
+    margin-left: 20px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    /* Rounded corners for submenu items */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Subtle background for submenu */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-item:hover .submenu {
+    display: block;
+    /* Show submenu on hover */
+}
+
+.submenu a {
+    color: white;
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    /* Rounded corners for submenu links */
+}
+
+.submenu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+main.content {
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+    background-color: var(--main-light);
+    min-height: 100vh;
+}
+
+.sidebar.collapsed+main.content {
+    margin-left: var(--collapsed-width);
+}

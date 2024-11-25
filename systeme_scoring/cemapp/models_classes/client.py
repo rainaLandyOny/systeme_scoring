@@ -6,7 +6,6 @@ class Client(models.Model):
     date_naissance = models.DateField()
     adresse = models.CharField(max_length=255)
     email = models.EmailField(blank=True, null=True)
-    telephone = models.CharField(max_length=10)
     n_cin = models.CharField(max_length=12)
     statut_familial = models.CharField(max_length=50)
     nbr_dependant = models.IntegerField(blank=True, null=True)

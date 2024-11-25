@@ -1,0 +1,119 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/gestionnaire_clients.css' %}">
+<link rel="stylesheet" href="{% static 'css/formulaire_client.css' %}">
+
+
+<div class="action-bar">
+    <button id="addClientButton" onclick="window.location.href='#'">Ajouter un client</button>
+</div>
+<form method="GET" id="searchForm">
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="Rechercher un client par nom ou prénom"
+    data-url="{% url 'rechercheclients' %}" 
+    >
+</form>
+<table id="clientsTable">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Date de naissance</th>
+            <th>Adresse</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody id="clientList">
+        {% for client in clients %}
+        <tr onclick="redirectToEdit({{ client.id }})" style="cursor: pointer;">
+                <td>{{ client.nom }}</td>
+                <td>{{ client.prenom }}</td>
+                <td>{{ client.date_naissance }}</td>
+                <td>{{ client.adresse }}</td>
+                <td>{{ client.email }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div id="clientModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('clientModal')">&times;</span>
+        <h2>Ajouter un Client</h2>
+        <form method="post" action="{% url 'ajoutclient' %}">
+            {% csrf_token %}
+
+            <h3>Informations Personnelles</h3>
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required>
+
+            <label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom" required>
+
+            <label for="date_naissance">Date de Naissance:</label>
+            <input type="date" id="date_naissance" name="date_naissance" required>
+
+            <label for="adresse">Adresse:</label>
+            <input type="text" id="adresse" name="adresse" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+
+            <label for="n_cin">Numéro CIN:</label>
+            <input type="text" id="n_cin" name="n_cin" required>
+
+            <h3>Situation Familiale et Professionnelle</h3>
+            <label for="statut_familial">Statut Familial:</label>
+            <select id="statut_familial" name="statut_familial">
+                <option value="Célibataire">Célibataire</option>
+                <option value="Marié">Marié</option>
+                <option value="Divorcé">Divorcé</option>
+                <option value="Veuf">Veuf</option>
+            </select>
+
+            <label for="nbr_dependant">Nombre de Dépendants:</label>
+            <input type="number" id="nbr_dependant" name="nbr_dependant">
+
+            <label for="situation_professionnelle">Situation Professionnelle:</label>
+            <input type="text" id="situation_professionnelle" name="situation_professionnelle" required>
+
+            <label for="titre_emploie">Titre d'Emploi:</label>
+            <input type="text" id="titre_emploie" name="titre_emploie">
+
+            <label for="nom_employeur">Nom de l'Employeur:</label>
+            <input type="text" id="nom_employeur" name="nom_employeur">
+
+            <label for="duree_emploie">Durée d'Emploi (en mois):</label>
+            <input type="number" id="duree_emploie" name="duree_emploie">
+
+            <h3>Informations Financières</h3>
+            <label for="revenu_mensuel">Revenu Mensuel:</label>
+            <input type="number" id="revenu_mensuel" name="revenu_mensuel" step="0.01">
+
+            <label for="depense_mensuelles">Dépenses Mensuelles:</label>
+            <input type="number" id="depense_mensuelles" name="depense_mensuelles" step="0.01">
+
+            <label for="dettes_existantes">Dettes Existantes:</label>
+            <input type="number" id="dettes_existantes" name="dettes_existantes" step="0.01">
+
+            <label for="situation_bancaire">Situation Bancaire:</label>
+            <textarea id="situation_bancaire" name="situation_bancaire"></textarea>
+
+            <button type="submit" class="btn-save">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function redirectToEdit(clientId) {
+        window.location.href = `/gestionnairedemande/modifie_client/${clientId}/`;
+    }
+</script>
+
+<script src="{% static 'js/liste_clients.js' %}"></script>
+<script src="{% static 'js/modal_client.js' %}"></script>
+
+{% endblock %}
