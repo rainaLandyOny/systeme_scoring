@@ -1,0 +1,35 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/telechargement.css' %}">
+
+<div class="container">
+    <h2>Générer un Document</h2>
+    <form method="GET" action="#">
+        <div class="form-group">
+            <label for="type">Type de Document :</label>
+            <select name="type" id="type" class="form-control">
+                <option value="">-- Sélectionnez un type de document --</option>
+                <option value="recapitulatif">Récapitulatif de Demande</option>
+                <option value="echeancier">Échéancier de Paiement</option>
+                <option value="certificat_solvabilite">Certificat de Solvabilité</option>
+                <option value="historique_paiements">Historique de Paiements</option>
+                <option value="avis_remboursement">Avis de Remboursement Anticipé</option>
+                <option value="attestation_cloture">Attestation de Clôture</option>
+                <option value="declaration_fiscale">Déclaration Fiscale</option>
+            </select>
+        </div>
+
+        <!-- Champs dynamiques -->
+        <div id="fields-container">
+            <!-- Les champs nécessaires seront affichés ici -->
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Télécharger</button>
+    </form>
+</div>
+
+<script src="{% static 'js/telechargement.js' %}" defer></script>
+
+{% endblock %}

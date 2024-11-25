@@ -1,0 +1,21 @@
+{% extends base_template %}
+{% block content %}
+<div class="container">
+    <h2>Effectuer un Paiement</h2>
+
+    <p><strong>Numéro de Crédit :</strong> {{ demande.numero_credit }}</p>
+    <p><strong>Client :</strong> {{ demande.client.nom }} {{ demande.client.prenom }}</p>
+    <p><strong>Montant Total :</strong> {{ demande.montant_total }}</p>
+    <p><strong>Statut :</strong> {{ demande.get_statut_display }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="somme_paye">Montant à Payer :</label>
+            <input type="number" id="somme_paye" name="somme_paye" step="0.01" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Enregistrer le Paiement</button>
+        <a href="{% url 'gestionedemandes' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -8,6 +9,8 @@ def user_login(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            user.last_login = timezone.now()
+            user.save()
             login(request, user)
             if user.role == 'admin':
                 return redirect('admin_home')
