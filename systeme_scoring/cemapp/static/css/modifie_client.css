@@ -1,0 +1,99 @@
+/* Conteneur principal */
+
+.container {
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Titre principal */
+
+.container h1 {
+    font-size: 32px;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #17a2b8;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+
+/* Sections */
+
+.form-section {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+
+/* Titre des sections */
+
+.form-section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #17a2b8;
+}
+
+
+/* Labels */
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+}
+
+
+/* Inputs et textarea */
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+/* Boutons */
+
+.button-container button {
+    background-color: #17a2b8;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+    background-color: #138496;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .container-modify-client {
+        padding: 15px;
+    }
+    .form-section h2 {
+        font-size: 18px;
+    }
+}

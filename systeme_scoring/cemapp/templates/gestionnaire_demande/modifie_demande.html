@@ -1,0 +1,81 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/nouvelle_demande.css' %}">
+
+<div class="container">
+    <h2>Modifier la Demande de Crédit</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Client (lecture seule) -->
+        <div class="mb-3">
+            <label class="form-label">Client</label>
+            <input type="text" class="form-control" value="{{ demande.client.nom }} {{ demande.client.prenom }} ({{ demande.client.n_cin }})" readonly>
+        </div>
+
+        <!-- Sélection du type de crédit -->
+        <div class="mb-3">
+            <label for="type_credit" class="form-label">Type de Crédit</label>
+            <select id="type_credit" class="form-select">
+                <option value="" selected disabled>-- Sélectionner un type de crédit --</option>
+                {% for type_credit in types_credit %}
+                <option value="{{ type_credit.id }}" {% if demande.sous_type_credit.type_credit.id == type_credit.id %}selected{% endif %}>
+                    {{ type_credit.nom }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Sélection du sous-type de crédit -->
+        <div class="mb-3">
+            <label for="sous_type_credit" class="form-label">Sous-Type de Crédit</label>
+            <select id="sous_type_credit" name="sous_type_credit" class="form-select">
+                {% for sous_type_credit in sous_types_credit %}
+                <option value="{{ sous_type_credit.id }}" {% if demande.sous_type_credit.id == sous_type_credit.id %}selected{% endif %}>
+                    {{ sous_type_credit.nom }}
+                </option>
+                {% endfor %}
+            </select>
+            <div id="credit_limits" class="info"></div>
+        </div>
+
+        <!-- Durée du prêt -->
+        <div class="mb-3">
+            <label for="duree" class="form-label">Durée (en mois)</label>
+            <input type="number" id="duree" name="duree" class="form-control" value="{{ demande.duree }}" required>
+        </div>
+
+        <!-- Montant total -->
+        <div class="mb-3">
+            <label for="montant_total" class="form-label">Montant Total</label>
+            <input type="number" step="0.01" id="montant_total" name="montant_total" class="form-control" value="{{ demande.montant_total }}" required>
+        </div>
+
+        <!-- Motif du crédit -->
+        <div class="mb-3">
+            <label for="motif_credit" class="form-label">Motif du Crédit</label>
+            <textarea id="motif_credit" name="motif_credit" class="form-control" rows="4" required>{{ demande.motif_credit }}</textarea>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Boutons d'action -->
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'gestionnairedemandes' %}" class="btn btn-secondary">Annuler</a>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </div>
+    </form>
+</div>
+
+<script src="{% static 'js/modifie_demande.js' %}"></script>
+
+{% endblock %}

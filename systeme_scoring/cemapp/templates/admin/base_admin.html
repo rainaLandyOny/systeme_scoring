@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Caisse d'Epargne de Madagascar</title>
+    <link rel="stylesheet" href="{% static 'css/base_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-5/css/all.css' %}">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="{% static 'img/LOGO-CEM-WEB.png' %}" alt="Logo CEM" class="logo" onclick="toggleSidebar()">
+            <span class="sidebar-title">Administrateur</span>
+        </div>
+        <nav>
+            <a href="#" class="nav-item"><i class="fa fa-home nav-icon"></i><span class="nav-text">Demandes en attente</span></a>
+            <a href="#" class="nav-item"><i class="fa fa-user nav-icon"></i><span class="nav-text">Gestion des employés</span></a>
+            <a href="#" class="nav-item"><i class="fa fa-money-bill nav-icon"></i><span class="nav-text">Gestion des offres</span></a>
+            <a href="#" class="nav-item"><i class="fa fa-chart-bar nav-icon"></i><span class="nav-text">Statistiques</span></a>
+            <a href="{% url 'logout' %}" class="nav-item"><i class="fa fa-sign-out-alt nav-icon"></i><span class="nav-text">Déconnexion</span></a>
+        </nav>
+    </div>
+
+    <main class="content">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+
+</html>

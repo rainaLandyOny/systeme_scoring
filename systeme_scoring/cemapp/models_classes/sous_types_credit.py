@@ -10,6 +10,7 @@ class SousTypeCredit(models.Model):
     duree_min = models.IntegerField()
     duree_max = models.IntegerField()
     taux_interet = models.DecimalField(max_digits=5, decimal_places=2)
+    prefixe = models.CharField(max_length=5, unique=True, null=False, default='CPSA')
     
     def __str__(self):
         return f"{self.nom} - {self.type_credit.nom}"

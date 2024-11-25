@@ -1,0 +1,115 @@
+/* Formulaire de recherche */
+
+#searchForm {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+#searchInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.5em;
+    font-size: 1em;
+    border: 1px solid #9fa0a2;
+    border-radius: 4px;
+    background-color: #e3e4e6;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#searchInput::placeholder {
+    color: #9fa0a2;
+}
+
+#searchInput:focus {
+    border-color: #e50005;
+    box-shadow: 0px 0px 8px rgba(229, 0, 5, 0.3);
+    outline: none;
+}
+
+
+/* Tableau des clients */
+
+#clientsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#clientsTable th,
+#clientsTable td {
+    padding: 0.75em 1em;
+    text-align: left;
+    border-bottom: 1px solid #e3e4e6;
+    font-size: 0.95em;
+}
+
+#clientsTable th {
+    background-color: white;
+    color: #e50005;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-color: #e50005;
+}
+
+#clientsTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#clientsTable tr:hover {
+    background-color: #e3e4e6;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#clientsTable td {
+    color: #333;
+}
+
+
+/* Barre d'action (ajout de client) */
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+#addClientButton {
+    background-color: #e50005;
+    color: white;
+    padding: 0.6em 1.2em;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#addClientButton:hover {
+    background-color: #b40004;
+    transform: scale(1.05);
+}
+
+
+/* Général */
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #e3e4e6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
