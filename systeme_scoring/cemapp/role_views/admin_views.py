@@ -1,7 +1,16 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+import joblib
 from ..models_classes.demande_credit import DemandeCredit
+from ..models_classes.client import Client
+from random import choice, randint, uniform
+from datetime import datetime, timedelta
+from decimal import Decimal
+from django.http import JsonResponse
+import numpy as np
+import pandas as pd
 
 def is_admin(user):
     return user.role == 'admin'

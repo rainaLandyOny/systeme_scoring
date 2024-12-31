@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyste des demandes - Caisse d'Epargne de Madagascar</title>
+    <link rel="stylesheet" href="{% static 'css/base_analyste_demande.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'img/LOGO-CEM-WEB.png' %}">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'analyste_home' %}">Accueil</a></li>
+                <li><a href="{% url 'listerendezvous' %}">Liste des Rendez-Vous</a></li>
+                <li><a href="{% url 'feature_importance_page' %}">Suivi des modèles IA</a></li>
+                <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Caisse d'Epargne de Madagascar. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

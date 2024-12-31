@@ -1,0 +1,28 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<h2>Détails du client</h2>
+<p><strong>Nom :</strong> {{ client.nom }} {{ client.prenom }}</p>
+<p><strong>Email :</strong> {{ client.email }}</p>
+<p><strong>Montant demandé :</strong> {{ demande.montant_demande }}</p>
+
+<h3>Scores IA</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Critère</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for critere, score in scores.items %}
+        <tr>
+            <td>{{ critere }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
