@@ -6,3 +6,6 @@ class TypeCredit(models.Model):
 
     def __str__(self):
         return self.nom
+    
+    def isCreditEntrepreneur(self):
+        return self.nom == "Crédit aux entrepreneurs"

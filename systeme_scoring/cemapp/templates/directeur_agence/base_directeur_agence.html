@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directeur Agence - Caisse d'Epargne de Madagascar</title>
+    <link rel="stylesheet" href="{% static 'css/base_directeur_agence.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-5/css/all.css' %}">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="{% static 'img/LOGO-CEM-WEB.png' %}" alt="Logo CEM" class="logo" onclick="toggleSidebar()">
+            <span class="sidebar-title">Directeur Agence</span>
+        </div>
+        <nav>
+            <a href="{% url 'directeur_home' %}" class="nav-item"><i class="fa fa-home nav-icon"></i><span class="nav-text">Accueil</span></a>
+            <!-- Dashboard Global -->
+            <div class="nav-group">
+                <a href="#" class="nav-item"><i class="fa fa-chart-bar nav-icon"></i><span class="nav-text">Tableau de bord</span></a>
+                <div class="nav-submenu">
+                    <a href="{% url 'performancegenerale' %}" class="nav-subitem"><i class="fa fa-chart-line"></i>Performances globales</a>
+                    <a href="{% url 'performanceemployes' %}" class="nav-subitem"><i class="fa fa-signal"></i>Performance des employés</a>
+                </div>
+            </div>
+
+            <!-- Gestion des Employés -->
+            <div class="nav-group">
+                <a href="{% url 'gestionemployes' %}" class="nav-item"><i class="fa fa-user nav-icon"></i><span class="nav-text">Gestion des employés</span></a>
+            </div>
+
+            <!-- Déconnexion -->
+            <a href="{% url 'logout' %}" class="nav-item"><i class="fa fa-sign-out-alt nav-icon"></i><span class="nav-text">Déconnexion</span></a>
+        </nav>
+    </div>
+
+    <main class="content">
+        {% block content %}
+        <!-- Contenu spécifique à chaque page -->
+        {% endblock %}
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const navItems = document.querySelectorAll('.nav-item');
+    
+            navItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.nextElementSibling; // Trouve le sous-menu associé
+    
+                    if (submenu && submenu.classList.contains('nav-submenu')) {
+                        submenu.classList.toggle('active'); // Active ou désactive l'affichage
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/details_scoring_demande.css' %}">
+
+<div class="details-container">
+    <h1>Détails du Scoring de la Demande</h1>
+
+    <div class="section">
+        <h2>Informations sur le Client</h2>
+        <table class="details-table">
+            <tr>
+                <th>Nom</th>
+                <td>{{ client.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ client.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Date de Naissance</th>
+                <td>{{ client.date_naissance }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ client.email }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ client.adresse }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Informations sur la Demande</h2>
+        <table class="details-table">
+            <tr>
+                <th>Montant Total</th>
+                <td>{{ demande.montant_total }}</td>
+            </tr>
+            <tr>
+                <th>Taux d'Intérêt</th>
+                <td>{{ demande.sous_type_credit.taux_interet }}</td>
+            </tr>
+            <tr>
+                <th>Type de Crédit</th>
+                <td>{{ demande.sous_type_credit.nom }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Scores Calculés</h2>
+        <table class="scores-table">
+            {% for score_label, score_value in scores.items %}
+            <tr>
+                <th>{{ score_label }}</th>
+                <td>{{ score_value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Boutons pour décider du rendez-vous ou du refus -->
+    <div class="action-buttons">
+        <!-- Bouton pour Rendez-vous -->
+        <button class="btn btn-primary" id="openRendezVousModal">Planifier un Rendez-vous</button>
+
+        <!-- Bouton pour Refus -->
+        <button class="btn btn-danger" id="openRefusModal">Refuser la Demande</button>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un rendez-vous -->
+<div class="modal" id="modalRendezVous">
+    <div class="modal-content">
+        <span class="close" id="closeRendezVousModal">&times;</span>
+        <h2>Planifier un Rendez-vous</h2>
+        <span class="close" id="closeRefusModal">&times;</span>
+            <h2>Créer un rendez-vous</h2>
+            <form method="post" action="#">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_date_debut_rendezvous">Date de début</label>
+                    <input type="datetime-local" id="id_date_debut_rendezvous" name="date_debut_rendezvous" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_date_fin_rendezvous">Date de fin</label>
+                    <input type="datetime-local" id="id_date_fin_rendezvous" name="date_fin_rendezvous" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_lieu">Lieu</label>
+                    <input type="text" id="id_lieu" name="lieu" required>
+                </div>
+                <button type="submit" class="btn">Enregistrer le rendez-vous</button>
+            </form>
+    </div>
+</div>
+
+<!-- Modal pour choisir la raison du refus -->
+<div class="modal" id="modalRefus">
+    <div class="modal-content">
+        <span class="close" id="closeRefusModal">&times;</span>
+        <h2>Raison du Refus</h2>
+        <form id="refusForm">
+            <div class="mb-3">
+                <label for="raisonRefus" class="form-label">Raison du Refus</label>
+                <select class="form-select" id="raisonRefus" required>
+                    <option value="score_inferieur">Score trop faible</option>
+                    <option value="dossier_incomplet">Dossier incomplet</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+            <div class="mb-3" id="autreRaison" style="display: none;">
+                <label for="detailsRefus" class="form-label">Détails supplémentaires</label>
+                <textarea class="form-control" id="detailsRefus"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">Refuser</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Gestion des modals
+    const openRendezVousModal = document.getElementById('openRendezVousModal');
+    const closeRendezVousModal = document.getElementById('closeRendezVousModal');
+    const modalRendezVous = document.getElementById('modalRendezVous');
+    
+    const openRefusModal = document.getElementById('openRefusModal');
+    const closeRefusModal = document.getElementById('closeRefusModal');
+    const modalRefus = document.getElementById('modalRefus');
+    
+    openRendezVousModal.addEventListener('click', () => {
+        modalRendezVous.style.display = 'block';
+    });
+    
+    closeRendezVousModal.addEventListener('click', () => {
+        modalRendezVous.style.display = 'none';
+    });
+    
+    openRefusModal.addEventListener('click', () => {
+        modalRefus.style.display = 'block';
+    });
+    
+    closeRefusModal.addEventListener('click', () => {
+        modalRefus.style.display = 'none';
+    });
+    
+    // Affichage du champ "Autre" dans le modal de refus
+    document.getElementById('raisonRefus').addEventListener('change', function() {
+        const autreRaison = document.getElementById('autreRaison');
+        if (this.value === 'autre') {
+            autreRaison.style.display = 'block';
+        } else {
+            autreRaison.style.display = 'none';
+        }
+    });
+
+    // Fermer les modals si on clique en dehors d'eux
+    window.addEventListener('click', function(event) {
+        if (event.target === modalRendezVous) {
+            modalRendezVous.style.display = 'none';
+        }
+        if (event.target === modalRefus) {
+            modalRefus.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

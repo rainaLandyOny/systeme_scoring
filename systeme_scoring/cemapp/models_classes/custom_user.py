@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from .agence import Agence
+from datetime import date
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, role=None):
@@ -26,13 +28,22 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
-        ('service_client', 'Service Client'),
+        ('directeur_agence', "Directeur de l' Agence"),
+        ('analyste_demande','Analyste des Demandes'),
         ('gestionnaire', 'Gestionnaire des Demandes'),
+        ('service_client', 'Service Client'),
+        ('agent_inspection', "Agent d' Inspection"),
     ]
+
+    agence = models.ForeignKey(Agence, on_delete=models.CASCADE, default=1)
+
+    nom = models.CharField(max_length=255, default="Anonyme")
+    prenom = models.CharField(max_length=255, default="Anonyme")
+    date_naissance = models.DateField(default=date(1990, 1, 1))
 
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(max_length=255, unique=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='service_client')
+    role = models.CharField(max_length=25, choices=ROLE_CHOICES, default='service_client')
 
     objects = CustomUserManager()
 

@@ -1,13 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('#searchInput');
-    const clientsTableBody = document.querySelector('#clientsTableBody');
+    const clientsTableBody = document.querySelector('#clientList');
 
     searchInput.addEventListener('input', function() {
         const searchQuery = searchInput.value.trim();
 
         if (searchQuery.length > 0) {
-            fetch(searchInput.dataset.url + '?search=' + encodeURIComponent(searchQuery))
-                .then(response => response.json())
+            fetch(searchInput.dataset.url + '?search=' + encodeURIComponent(searchQuery), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau ou serveur');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     clientsTableBody.innerHTML = '';
 
@@ -17,14 +26,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             row.innerHTML = `
                                 <td>${client.nom}</td>
                                 <td>${client.prenom}</td>
+                                <td>${client.date_naissance}</td>
+                                <td>${client.n_cin}</td>
                                 <td>${client.email || 'N/A'}</td>
-                                <td>${client.telephone}</td>
                             `;
+                            row.style.cursor = 'pointer';
+                            row.addEventListener('click', () => {
+                                window.location.href = `/gestionnairedemande/modifie_client/${client.id}/`;
+                            });
                             clientsTableBody.appendChild(row);
                         });
                     } else {
                         const noResultRow = document.createElement('tr');
-                        noResultRow.innerHTML = '<td colspan="4">Aucun résultat trouvé</td>';
+                        noResultRow.innerHTML = '<td colspan="5">Aucun résultat trouvé</td>';
                         clientsTableBody.appendChild(noResultRow);
                     }
                 })

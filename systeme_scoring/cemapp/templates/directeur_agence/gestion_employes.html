@@ -1,0 +1,108 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/gestion_employes.css' %}">
+
+<div class="container">
+    <h1>Gestion des Employés</h1>
+    
+    <div id="employee-list-container">
+        <table id="employee-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in roles %}
+                    <tr class="role-header">
+                        <td colspan="5"><strong>{{ role|capfirst }}</strong></td>
+                    </tr>
+                    {% for employe in employes %}
+                        {% if employe.role == role %}
+                            <tr class="employee-row" data-id="{{ employe.id }}">
+                                <td>{{ employe.nom }}</td>
+                                <td>{{ employe.prenom }}</td>
+                                <td>{{ employe.username }}</td>
+                                <td>{{ employe.email }}</td>
+                                <td>{{ employe.get_role_display }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="employee-form-container" style="display: none;">
+        <h3 id="form-title">Ajouter/Modifier un Employé</h3>
+        <form id="employee-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" id="user-id">
+
+            <div class="form-group">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Rôle</label>
+                <select id="role" name="role" class="form-control" required>
+                    {% for role in roles %}
+                        <option value="{{ role }}">{{ role|capfirst }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date_naissance">Date de naissance</label>
+                <input type="date" id="date_naissance" name="date_naissance" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Gestion des clics sur une ligne pour afficher le formulaire de modification
+    document.querySelectorAll('.employee-row').forEach(row => {
+        row.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            
+            // Récupérer les données de l'utilisateur dans la table
+            const nom = this.children[0].textContent.trim();
+            const prenom = this.children[1].textContent.trim();
+            const username = this.children[2].textContent.trim();
+            const email = this.children[3].textContent.trim();
+            const role = this.children[4].textContent.trim();
+
+            // Pré-remplir le formulaire
+            document.getElementById('user-id').value = userId;
+            document.getElementById('nom').value = nom;
+            document.getElementById('prenom').value = prenom;
+            document.getElementById('username').value = username;
+            document.getElementById('email').value = email;
+            document.getElementById('role').value = role;
+
+            // Afficher le formulaire
+            document.getElementById('employee-form-container').style.display = 'block';
+            document.getElementById('form-title').textContent = 'Modifier un Employé';
+        });
+    });
+</script>
+{% endblock %}

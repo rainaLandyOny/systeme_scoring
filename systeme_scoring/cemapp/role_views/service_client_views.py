@@ -8,19 +8,9 @@ from ..utils.role_checker import role_required
 def is_service_client(user):
     return user.role == 'service_client'
 
-@login_required
-@role_required('service_client')
-def service_home(request):
-    return render(request, 'service_client/service_client_home.html')
 
 @login_required
-@role_required('service_client')
-def liste_offres_credit(request):
-    offres_credit = TypeCredit.objects.all()
-    return render(request, 'liste_offres_credit.html', {'offres_credit': offres_credit})
-
-@login_required
-@role_required('service_client')
+@user_passes_test(is_service_client)
 def offres_credit(request):
     type_credits = TypeCredit.objects.prefetch_related('soustypecredit_set').all()
     if request.user.is_authenticated:
@@ -35,7 +25,7 @@ def offres_credit(request):
     })
     
 @login_required
-@role_required('service_client')
+@user_passes_test(is_service_client)
 def simulation_view(request, sous_type_id):
     sous_type = get_object_or_404(SousTypeCredit, id=sous_type_id)
     return render(request, 'service_client/simulation_offre.html', {'sous_type': sous_type})

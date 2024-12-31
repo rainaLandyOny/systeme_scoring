@@ -14,10 +14,16 @@ def user_login(request):
             login(request, user)
             if user.role == 'admin':
                 return redirect('admin_home')
+            elif user.role == 'directeur_agence':
+                return redirect('directeur_home')
+            elif user.role == 'analyste_demande':
+                return redirect('analyste_home')
             elif user.role == 'service_client':
                 return redirect('offre_credit')
             elif user.role == 'gestionnaire':
                 return redirect('gestionnaire_home')
+            elif user.role == 'agent_inspection':
+                return redirect('agent_inspection_home')
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
     return render(request, 'login.html')
