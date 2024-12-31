@@ -1,0 +1,63 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/directeur_home.css' %}">
+
+<div class="dashboard">
+
+    <!-- Section des statistiques globales -->
+    <div class="stats-globales">
+        <div class="card">
+            <h2>Clients Totaux</h2>
+            <p class="stat-value">{{ total_clients }}</p>
+            <i class="fa fa-users icon"></i>
+        </div>
+    </div>
+
+    <!-- Section des statistiques des demandes -->
+    <div class="stats-demandes">
+        <h2>Statistiques des Demandes de Crédit (Ce Mois)</h2>
+        <div class="card-group">
+            <div class="card">
+                <h3>En Attente</h3>
+                <p class="stat-value">{{ demandes_en_attente }}</p>
+                <i class="fa fa-hourglass-half icon"></i>
+            </div>
+            <div class="card">
+                <h3>En Attente de Signature</h3>
+                <p class="stat-value">{{ demandes_signature }}</p>
+                <i class="fa fa-pencil-square-o icon"></i>
+            </div>
+            <div class="card">
+                <h3>Approuvées</h3>
+                <p class="stat-value">{{ demandes_approuvees }}</p>
+                <i class="fa fa-check-circle icon"></i>
+            </div>
+            <div class="card">
+                <h3>Rejetées</h3>
+                <p class="stat-value">{{ demandes_rejetees }}</p>
+                <i class="fa fa-times-circle icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section des montants financiers -->
+    <div class="stats-financieres">
+        <h2>Montants Financiers (Ce Mois)</h2>
+        <div class="card-group">
+            <div class="card">
+                <h3>Montant Total Emprunté</h3>
+                <p class="stat-value">{{ montant_emprunte }}</p>
+                <i class="fa fa-money icon"></i>
+            </div>
+            <div class="card">
+                <h3>Remboursement</h3>
+                <p class="stat-value">{{ benefice_mois }}</p>
+                <i class="fa fa-line-chart icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

@@ -23,7 +23,7 @@ def is_gestionnaire_demande(user):
 @user_passes_test(is_gestionnaire_demande)
 def gestionnaire_home(request):
     dernieres_demandes = DemandeCredit.objects.filter(
-        statut_demande__in=['en_attente', 'en_attente_signature']
+        statut_demande__in=['en_attente_validation', 'en_attente_signature']
     ).order_by('-date_demande')[:10]
 
     return render(request, 'gestionnaire_demande/gestionnaire_home.html', {'demandes': dernieres_demandes})
@@ -38,95 +38,128 @@ def gestionnaire_clients(request):
 @login_required
 @user_passes_test(is_gestionnaire_demande)
 def recherche_clients(request):
-    if request.method == 'GET' and request.is_ajax():
-        search_query = request.GET.get('search', '').strip()
-        clients = Client.objects.filter(
-            Q(nom__icontains=search_query) | Q(prenom__icontains=search_query)
-        )[:10]
-        clients_data = [
-            {
-                'nom': client.nom,
-                'prenom': client.prenom,
-                'email': client.email,
-                'telephone': client.telephone,
-            }
-            for client in clients
-        ]
-        
-        return JsonResponse({'clients': clients_data})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    # Vérifiez si la requête est une requête AJAX de type GET
+    if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            # Récupérez le paramètre 'search'
+            search_query = request.GET.get('search', '').strip()
+
+            # Filtrage des clients en fonction de la recherche
+            if search_query:
+                clients = Client.objects.filter(
+                    Q(nom__icontains=search_query) |
+                    Q(prenom__icontains=search_query) |
+                    Q(n_cin__icontains=search_query)
+                )[:10]  # Limitez à 10 résultats
+            else:
+                # Retournez tous les clients, avec une limite
+                clients = Client.objects.all()[:10]
+
+            # Transformez les clients en format JSON
+            clients_data = [
+                {
+                    'nom': client.nom,
+                    'prenom': client.prenom,
+                    'date_naissance': client.date_naissance,
+                    'n_cin': client.n_cin,
+                    'email': client.email or 'N/A',
+                }
+                for client in clients
+            ]
+
+            # Retournez les données JSON
+            return JsonResponse({'clients': clients_data})
+        except Exception as e:
+            # Loguez l'erreur pour débogage
+            print(f"Erreur lors du traitement de la recherche : {e}")
+            return JsonResponse({'error': 'Une erreur est survenue lors du traitement de la recherche.'}, status=500)
+
+    # Retour pour les requêtes non valides
+    return JsonResponse({'error': 'Requête invalide.'}, status=400)
+
+
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 
 @login_required
 @user_passes_test(is_gestionnaire_demande)
 def ajouter_client(request):
     if request.method == 'POST':
-        nom = request.POST.get('nom')
-        prenom = request.POST.get('prenom')
-        date_naissance = request.POST.get('date_naissance')
-        adresse = request.POST.get('adresse')
-        email = request.POST.get('email')
-        n_cin = request.POST.get('n_cin')
-        statut_familial = request.POST.get('statut_familial')
-        nbr_dependant = request.POST.get('nbr_dependant')
-        situation_professionnelle = request.POST.get('situation_professionnelle')
-        titre_emploie = request.POST.get('titre_emploie')
-        nom_employeur = request.POST.get('nom_employeur')
-        duree_emploie = request.POST.get('duree_emploie')
-        revenu_mensuel = request.POST.get('revenu_mensuel')
-        depense_mensuelles = request.POST.get('depense_mensuelles')
-        dettes_existantes = request.POST.get('dettes_existantes')
-        situation_bancaire = request.POST.get('situation_bancaire')
-        
-        client = Client(
-            nom=nom,
-            prenom=prenom,
-            date_naissance=date_naissance,
-            adresse=adresse,
-            email=email,
-            n_cin=n_cin,
-            statut_familial=statut_familial,
-            nbr_dependant=nbr_dependant,
-            situation_professionnelle=situation_professionnelle,
-            titre_emploie=titre_emploie,
-            nom_employeur=nom_employeur,
-            duree_emploie=duree_emploie,
-            revenu_mensuel=revenu_mensuel,
-            depense_mensuelles=depense_mensuelles,
-            dettes_existantes=dettes_existantes,
-            situation_bancaire=situation_bancaire
-        )
-        client.save()
-        return redirect('gestionnaireclients')
+        try:
+            client_data = {
+                'nom': request.POST.get('nom'),
+                'prenom': request.POST.get('prenom'),
+                'date_naissance': request.POST.get('date_naissance'),
+                'adresse': request.POST.get('adresse'),
+                'email': request.POST.get('email'),
+                'n_cin': request.POST.get('n_cin'),
+                'statut_familial': request.POST.get('statut_familial'),
+                'nbr_dependant': request.POST.get('nbr_dependant'),
+                'situation_professionnelle': request.POST.get('situation_professionnelle'),
+                'titre_emploie': request.POST.get('titre_emploie'),
+                'nom_employeur': request.POST.get('nom_employeur'),
+                'duree_emploie': request.POST.get('duree_emploie'),
+                'revenu_mensuel': request.POST.get('revenu_mensuel'),
+                'depense_mensuelles': request.POST.get('depense_mensuelles'),
+                'dettes_existantes': request.POST.get('dettes_existantes'),
+                'situation_bancaire': request.POST.get('situation_bancaire'),
+            }
+            # Création de l'instance Client
+            client = Client(**client_data)
+            client.full_clean()  # Validation des données du modèle
+            client.save()
+            messages.success(request, "Le client a été ajouté avec succès.")
+            return redirect('gestionnaireclients')
+        except ValidationError as e:
+            messages.error(request, f"Erreur lors de l'ajout du client : {e}")
 
-    return render(request, 'ajouter_client.html')
+    return render(request, 'gestionnaire_demande/gestionnaire_client.html')
 
 @login_required
 @user_passes_test(is_gestionnaire_demande)
 def modifie_client(request, client_id):
     client = get_object_or_404(Client, id=client_id)
-    
+
     if request.method == "POST":
-        client.nom = request.POST.get('nom')
-        client.prenom = request.POST.get('prenom')
-        client.date_naissance = request.POST.get('date_naissance')
-        client.adresse = request.POST.get('adresse')
-        client.email = request.POST.get('email')
-        client.n_cin = request.POST.get('n_cin')
-        client.statut_familial = request.POST.get('statut_familial')
-        client.nbr_dependant = request.POST.get('nbr_dependant')
-        client.situation_professionnelle = request.POST.get('situation_professionnelle')
-        client.titre_emploie = request.POST.get('titre_emploie')
-        client.nom_employeur = request.POST.get('nom_employeur')
-        client.duree_emploie = request.POST.get('duree_emploie')
-        client.revenu_mensuel = request.POST.get('revenu_mensuel')
-        client.depense_mensuelles = request.POST.get('depense_mensuelles')
-        client.dettes_existantes = request.POST.get('dettes_existantes')
-        client.situation_bancaire = request.POST.get('situation_bancaire')
-        
-        client.save()
-        return redirect('gestionnaireclients')
+        try:
+            # Mise à jour des champs existants
+            client.nom = request.POST.get('nom')
+            client.prenom = request.POST.get('prenom')
+            client.date_naissance = request.POST.get('date_naissance')
+            client.adresse = request.POST.get('adresse')
+            client.email = request.POST.get('email')
+            client.n_cin = request.POST.get('n_cin')
+            client.statut_familial = request.POST.get('statut_familial')
+            client.nbr_dependant = request.POST.get('nbr_dependant')
+            client.situation_professionnelle = request.POST.get('situation_professionnelle')
+            client.titre_emploie = request.POST.get('titre_emploie')
+            client.nom_employeur = request.POST.get('nom_employeur')
+            client.duree_emploie = request.POST.get('duree_emploie')
+            client.revenu_mensuel = request.POST.get('revenu_mensuel')
+            client.depense_mensuelles = request.POST.get('depense_mensuelles')
+            client.dettes_existantes = request.POST.get('dettes_existantes')
+            client.situation_bancaire = request.POST.get('situation_bancaire')
+
+            # Mise à jour des nouveaux champs
+            client.secteur_activite = request.POST.get('secteur_activite')
+            client.type_contrat = request.POST.get('type_contrat')
+            client.solde_bancaire = request.POST.get('solde_bancaire')
+            client.valeur_actifs = request.POST.get('valeur_actifs')
+            client.montant_emprunts_en_cours = request.POST.get('montant_emprunts_en_cours')
+            client.historique_credit = request.POST.get('historique_credit')
+            client.historique_paiement = request.POST.get('historique_paiement')
+
+            # Validation et sauvegarde
+            client.full_clean()
+            client.save()
+            messages.success(request, "Les informations du client ont été mises à jour avec succès.")
+            return redirect('gestionnaireclients')
+        except ValidationError as e:
+            messages.error(request, f"Erreur lors de la modification du client : {e}")
 
     return render(request, 'gestionnaire_demande/modifie_client.html', {'client': client})
+
+
 
 @login_required
 @user_passes_test(is_gestionnaire_demande)
@@ -199,7 +232,7 @@ def nouvelle_demande(request):
             montant_total=montant_total,
             montant_payer_mois=montant_mensuel,
             motif_credit=motif_credit,
-            statut_demande="en_attente"
+            statut_demande="en_attente_validation"
         )
 
         messages.success(request, f"La demande {demande.numero_credit} a été créée avec succès.")

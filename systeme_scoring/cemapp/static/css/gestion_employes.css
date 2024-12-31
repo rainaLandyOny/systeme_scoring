@@ -1,0 +1,146 @@
+/* Styles globaux */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #e50005;
+    margin-bottom: 20px;
+}
+
+
+/* Tableau des employés */
+
+#employee-list-container {
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+#employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+#employee-table th,
+#employee-table td {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+#employee-table th {
+    background-color: #e50005;
+    color: #fff;
+}
+
+#employee-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#employee-table tr:hover {
+    background-color: #f5e3e3;
+    cursor: pointer;
+}
+
+.role-header {
+    background-color: #9fa0a2;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* Formulaire d'ajout/modification */
+
+#employee-form-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+#employee-form-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #e50005;
+    box-shadow: 0 0 5px rgba(229, 0, 5, 0.5);
+}
+
+button {
+    background-color: #e50005;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cc0004;
+}
+
+
+/* Responsive design */
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    #employee-table th,
+    #employee-table td {
+        padding: 10px;
+    }
+    .form-group input,
+    .form-group select {
+        padding: 8px;
+    }
+    button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}

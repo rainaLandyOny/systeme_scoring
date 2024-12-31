@@ -13,29 +13,29 @@
         <div class="form-section">
             <h2>Informations Personnelles</h2>
             <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" value="{{ client.nom }}" required>
+            <input type="text" id="nom" name="nom" value="{{ client.nom }}" maxlength="255" required>
 
             <label for="prenom">Prénom:</label>
-            <input type="text" id="prenom" name="prenom" value="{{ client.prenom }}" required>
+            <input type="text" id="prenom" name="prenom" value="{{ client.prenom }}" maxlength="255" required>
 
             <label for="date_naissance">Date de Naissance:</label>
-            <input type="date" id="date_naissance" name="date_naissance" value="{{ client.date_naissance }}" required>
+            <input type="date" id="date_naissance" name="date_naissance" value="{{ client.date_naissance|default:''|date:'Y-m-d' }}" required>
 
             <label for="adresse">Adresse:</label>
-            <input type="text" id="adresse" name="adresse" value="{{ client.adresse }}" required>
+            <input type="text" id="adresse" name="adresse" value="{{ client.adresse }}" maxlength="255" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ client.email }}">
+            <input type="email" id="email" name="email" value="{{ client.email }}" maxlength="255">
 
             <label for="n_cin">Numéro CIN:</label>
-            <input type="text" id="n_cin" name="n_cin" value="{{ client.n_cin }}" required>
+            <input type="text" id="n_cin" name="n_cin" value="{{ client.n_cin }}" maxlength="12" required>
         </div>
 
         <!-- Section 2 : Situation Familiale et Professionnelle -->
         <div class="form-section">
             <h2>Situation Familiale et Professionnelle</h2>
             <label for="statut_familial">Statut Familial:</label>
-            <select id="statut_familial" name="statut_familial">
+            <select id="statut_familial" name="statut_familial" required>
                 <option value="Célibataire" {% if client.statut_familial == "Célibataire" %}selected{% endif %}>Célibataire</option>
                 <option value="Marié" {% if client.statut_familial == "Marié" %}selected{% endif %}>Marié</option>
                 <option value="Divorcé" {% if client.statut_familial == "Divorcé" %}selected{% endif %}>Divorcé</option>
@@ -43,41 +43,70 @@
             </select>
 
             <label for="nbr_dependant">Nombre de Dépendants:</label>
-            <input type="number" id="nbr_dependant" name="nbr_dependant" value="{{ client.nbr_dependant }}">
+            <input type="number" id="nbr_dependant" name="nbr_dependant" min="0" value="{{ client.nbr_dependant }}">
 
             <label for="situation_professionnelle">Situation Professionnelle:</label>
-            <input type="text" id="situation_professionnelle" name="situation_professionnelle" value="{{ client.situation_professionnelle }}" required>
+            <input type="text" id="situation_professionnelle" name="situation_professionnelle" value="{{ client.situation_professionnelle }}" maxlength="50" required>
 
             <label for="titre_emploie">Titre d'Emploi:</label>
-            <input type="text" id="titre_emploie" name="titre_emploie" value="{{ client.titre_emploie }}">
+            <input type="text" id="titre_emploie" name="titre_emploie" value="{{ client.titre_emploie }}" maxlength="100">
 
             <label for="nom_employeur">Nom de l'Employeur:</label>
-            <input type="text" id="nom_employeur" name="nom_employeur" value="{{ client.nom_employeur }}">
+            <input type="text" id="nom_employeur" name="nom_employeur" value="{{ client.nom_employeur }}" maxlength="255">
 
-            <label for="duree_emploie">Durée d'Emploi (en mois):</label>
-            <input type="number" id="duree_emploie" name="duree_emploie" value="{{ client.duree_emploie }}">
+            <label for="duree_emploie">Durée d'Emploi (en années):</label>
+            <input type="number" id="duree_emploie" name="duree_emploie" min="0" value="{{ client.duree_emploie }}">
+
+            <label for="secteur_activite">Secteur d'Activité:</label>
+            <input type="text" id="secteur_activite" name="secteur_activite" value="{{ client.secteur_activite }}" maxlength="100">
+
+            <label for="type_contrat">Type de Contrat:</label>
+            <select id="type_contrat" name="type_contrat">
+                <option value="" {% if client.type_contrat == None %}selected{% endif %}>Non spécifié</option>
+                <option value="CDI" {% if client.type_contrat == "CDI" %}selected{% endif %}>CDI</option>
+                <option value="CDD" {% if client.type_contrat == "CDD" %}selected{% endif %}>CDD</option>
+                <option value="Freelance" {% if client.type_contrat == "Freelance" %}selected{% endif %}>Freelance</option>
+                <option value="Temporaire" {% if client.type_contrat == "Temporaire" %}selected{% endif %}>Temporaire</option>
+            </select>
         </div>
 
         <!-- Section 3 : Informations Financières -->
         <div class="form-section">
             <h2>Informations Financières</h2>
-            <label for="revenu_mensuel">Revenu Mensuel:</label>
-            <input type="number" id="revenu_mensuel" name="revenu_mensuel" step="0.01" value="{{ client.revenu_mensuel }}">
+            <label for="revenu_mensuel">Revenu Mensuel (en Ariary):</label>
+            <input type="number" id="revenu_mensuel" name="revenu_mensuel" step="0.01" min="0" value="{{ client.revenu_mensuel }}">
 
-            <label for="depense_mensuelles">Dépenses Mensuelles:</label>
-            <input type="number" id="depense_mensuelles" name="depense_mensuelles" step="0.01" value="{{ client.depense_mensuelles }}">
+            <label for="depense_mensuelles">Dépenses Mensuelles (en Ariary):</label>
+            <input type="number" id="depense_mensuelles" name="depense_mensuelles" step="0.01" min="0" value="{{ client.depense_mensuelles }}">
 
-            <label for="dettes_existantes">Dettes Existantes:</label>
-            <input type="number" id="dettes_existantes" name="dettes_existantes" step="0.01" value="{{ client.dettes_existantes }}">
+            <label for="dettes_existantes">Dettes Existantes (en Ariary):</label>
+            <input type="number" id="dettes_existantes" name="dettes_existantes" step="0.01" min="0" value="{{ client.dettes_existantes }}">
+
+            <label for="solde_bancaire">Solde Bancaire (en Ariary):</label>
+            <input type="number" id="solde_bancaire" name="solde_bancaire" step="0.01" min="0" value="{{ client.solde_bancaire }}">
+
+            <label for="valeur_actifs">Valeur des Actifs (en Ariary):</label>
+            <input type="number" id="valeur_actifs" name="valeur_actifs" step="0.01" min="0" value="{{ client.valeur_actifs }}">
+
+            <label for="montant_emprunts_en_cours">Montant des Emprunts en Cours (en Ariary):</label>
+            <input type="number" id="montant_emprunts_en_cours" name="montant_emprunts_en_cours" step="0.01" min="0" value="{{ client.montant_emprunts_en_cours }}">
 
             <label for="situation_bancaire">Situation Bancaire:</label>
-            <textarea id="situation_bancaire" name="situation_bancaire">{{ client.situation_bancaire }}</textarea>
+            <textarea id="situation_bancaire" name="situation_bancaire" maxlength="1000">{{ client.situation_bancaire }}</textarea>
+
+            <label for="historique_credit">Historique de Crédit:</label>
+            <textarea id="historique_credit" name="historique_credit" maxlength="2000">{{ client.historique_credit }}</textarea>
+
+            <label for="historique_paiement">Historique de Paiement:</label>
+            <textarea id="historique_paiement" name="historique_paiement" maxlength="2000">{{ client.historique_paiement }}</textarea>
         </div>
 
         <!-- Boutons -->
         <div class="button-container">
-            <button type="submit">Enregistrer les Modifications</button>
+            <button type="submit" class="btn-save">Enregistrer les Modifications</button>
         </div>
     </form>
 </div>
+
+
 {% endblock %}

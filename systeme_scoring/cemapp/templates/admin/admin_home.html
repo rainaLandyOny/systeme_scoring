@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 {% for demande in page_obj %}
-                    <tr>                        
+                    <tr onclick="redirectToEdit({{ demande.id }})">                        
                         <td>{{ forloop.counter }}</td>
                         <td>{{ demande.numero_credit }}</td>
                         <td>{{ demande.client.nom }} {{ demande.client.prenom }}</td>
@@ -58,4 +58,11 @@
         </span>
     </div>
 </div>
+
+<script>
+    function redirectToEdit(demandeId) {
+        window.location.href = `/admin/detailsscoringdemande/${demandeId}/`;
+    }
+</script>
+
 {% endblock %}
