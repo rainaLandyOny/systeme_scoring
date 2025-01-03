@@ -1,0 +1,86 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+
+<link rel="stylesheet" href="{% static 'css/liste_rendez_vous.css' %}">
+
+<div class="container mt-5">
+    <h2>Liste des Rendez-vous</h2>
+
+    <!-- Afficher la liste des rendez-vous -->
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date et Heure</th>
+                <th>Client</th>
+                <th>Durée</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rendezvous in page_obj %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ rendezvous.datetime_debut|date:"d/m/Y H:i" }}</td>
+                <td>{{ rendezvous.client.nom }} {{ rendezvous.client.prenom }}</td>
+                <td>{{ rendezvous.duree }} minutes</td>
+                <td>
+                    {% if rendezvous.termine %}
+                        <span class="badge bg-success">Terminé</span>
+                    {% else %}
+                        <span class="badge bg-warning">En attente</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'resume_rendezvous' rendezvous.id %}" class="btn btn-primary btn-sm">Voir</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun rendez-vous à afficher.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

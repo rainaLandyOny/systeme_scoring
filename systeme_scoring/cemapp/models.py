@@ -8,3 +8,7 @@ from cemapp.models_classes.remboursement_credit import RemboursementCredit
 from cemapp.models_classes.evaluation_credit import EvaluationCredit
 from cemapp.models_classes.document_credit import DocumentCredit
 from cemapp.models_classes.sous_types_credit import SousTypeCredit
+from cemapp.models_classes.agence import Agence
+from cemapp.models_classes.rendezvous_finalisation import RendezvousFinalisation
+from cemapp.models_classes.rendezvous_inspection import RendezvousInspection
+from cemapp.models_classes.inspection_environnement import InspectionEnvironnement

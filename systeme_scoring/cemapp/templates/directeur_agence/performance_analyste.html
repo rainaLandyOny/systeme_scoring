@@ -1,0 +1,152 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+<div class="container mt-5">
+    <h1 class="text-center">Performances des Employés</h1>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <form id="filter-form">
+                <div class="form-group">
+                    <label for="year">Année</label>
+                    <select class="form-control" id="year" name="year">
+                        {% for y in years %}
+                        <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="month">Mois</label>
+                    <select id="month" name="month">
+                        <option value="">Tous les mois</option>
+                        <option value="1">Janvier</option>
+                        <option value="2">Février</option>
+                        <option value="3">Mars</option>
+                        <option value="4">Avril</option>
+                        <option value="5">Mai</option>
+                        <option value="6">Juin</option>
+                        <option value="7">Juillet</option>
+                        <option value="8">Août</option>
+                        <option value="9">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Filtrer</button>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <canvas id="employee-performance-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Fonction pour charger les données depuis l'API
+    function loadPerformanceData() {
+        const year = document.getElementById('year').value;
+        const month = document.getElementById('month').value;
+
+        fetch(`/api/get_performance_employes/?annee=${year}&mois=${month}`)
+            .then(response => response.json())
+            .then(data => {
+                updateChart(data);
+            })
+            .catch(error => console.error('Erreur lors de la récupération des données:', error));
+    }
+
+    // Fonction pour mettre à jour le graphique
+    function updateChart(data) {
+        console.log("Données reçues pour le graphique :", data);
+
+        const labels = data.labels;
+        const totals = data.totals;
+        const approuves = data.approuves;
+        const rejetes = data.rejetes;
+        const en_attente = data.en_attente;
+
+        performanceChart.data.labels = labels;
+        performanceChart.data.datasets[0].data = totals;
+        performanceChart.data.datasets[1].data = approuves;
+        performanceChart.data.datasets[2].data = rejetes;
+        performanceChart.data.datasets[3].data = en_attente;
+        performanceChart.update();
+    }
+
+    // Initialisation du graphique
+    const ctx = document.getElementById('employee-performance-chart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Total Traité',
+                    data: [],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Approuvés',
+                    data: [],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Rejetés',
+                    data: [],
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'En Attente',
+                    data: [],
+                    backgroundColor: 'rgba(255, 205, 86, 0.6)',
+                    borderColor: 'rgba(255, 205, 86, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Performances des Employés'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Employés'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre de Demandes'
+                    }
+                }
+            }
+        }
+    });
+
+    // Écouteur d'événement pour le filtre
+    document.getElementById('filter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        loadPerformanceData();
+    });
+
+    // Charger les données initiales
+    loadPerformanceData();
+</script>
+{% endblock %}

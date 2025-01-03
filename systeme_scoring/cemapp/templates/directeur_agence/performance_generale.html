@@ -1,0 +1,194 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/performance_generale.css' %}">
+
+<div class="chart-container">
+    <h3>1. Montants empruntés vs. Remboursements reçus</h3>
+    <canvas id="empruntsRemChart"></canvas>
+    <div id="filters" class="filter">
+        <label for="year">Année:</label>
+        <select id="year">
+            <option value="">Toutes les années</option>
+            {% for y in years %}
+                <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+        <label for="month">Mois:</label>
+        <select id="month">
+            <option value="">Tous les mois</option>
+            <option value="1">Janvier</option>
+            <option value="2">Février</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select>
+    </div>
+</div>
+
+<div class="chart-container">
+    <h3>2. Répartition des demandes par statut</h3>
+    <canvas id="statusDistChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let empruntsRemChartInstance = null;
+    let statusDistChartInstance = null;
+
+    async function fetchPerformanceData() {
+        const year = document.getElementById("year").value;
+        const month = document.getElementById("month").value;
+
+        try {
+            const response = await fetch(`/api/get_performance_generale/?year=${year}&month=${month}`);
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.emprunts_vs_remboursements && data.status_distribution) {
+                    updateEmpruntsRemChart(data.emprunts_vs_remboursements);
+                    updateStatusDistChart(data.status_distribution);
+                } else {
+                    console.error("Données invalides reçues du serveur.");
+                }
+            } else {
+                console.error("Erreur lors de la récupération des données : ", response.statusText);
+            }
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+        }
+    }
+
+    function generateLabelsForYearOrMonth(year, month) {
+        if (month) {
+            const daysInMonth = new Date(year, month, 0).getDate();
+            return Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`);
+        } else {
+            return ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        }
+    }
+
+    function updateEmpruntsRemChart(data) {
+        const year = document.getElementById("year").value || new Date().getFullYear();
+        const month = document.getElementById("month").value;
+    
+        // Génération des labels complets (mois ou jours)
+        const labels = generateLabelsForYearOrMonth(year, month);
+    
+        // Initialisation des montants à zéro pour tous les labels
+        const empruntsMap = Object.fromEntries((data.labels || []).map((label, i) => [label, parseFloat(data.emprunts[i]) || 0]));
+        const remboursementsMap = Object.fromEntries((data.labels || []).map((label, i) => [label, parseFloat(data.remboursements[i]) || 0]));
+    
+        const emprunts = labels.map(label => empruntsMap[label] || 0);
+        const remboursements = labels.map(label => remboursementsMap[label] || 0);
+    
+        const ctx = document.getElementById("empruntsRemChart").getContext("2d");
+    
+        if (empruntsRemChartInstance) {
+            empruntsRemChartInstance.destroy();
+        }
+    
+        empruntsRemChartInstance = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Emprunts",
+                        data: emprunts,
+                        borderColor: "rgba(229, 0, 5, 1)",
+                        backgroundColor: "rgba(229, 0, 5, 0.2)",
+                        tension: 0.4
+                    },
+                    {
+                        label: "Remboursements",
+                        data: remboursements,
+                        borderColor: "rgba(159, 160, 162, 1)",
+                        backgroundColor: "rgba(159, 160, 162, 0.2)",
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "top"
+                    },
+                    title: {
+                        display: true,
+                        text: "Montants empruntés vs. Remboursements"
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: month ? "Jours du Mois" : "Mois"
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Montant (MGA)"
+                        }
+                    }
+                }
+            }
+        });
+        console.log("Données pour Chart.js :", {
+            labels: labels,
+            datasets: [
+                { label: "Emprunts", data: emprunts },
+                { label: "Remboursements", data: remboursements }
+            ]
+        });
+        
+    }   
+
+    function updateStatusDistChart(data) {
+        const labels = data.map(d => d.statut_demande || "Inconnu");
+        const values = data.map(d => d.total || 0);
+
+        const ctx = document.getElementById("statusDistChart").getContext("2d");
+
+        if (statusDistChartInstance) {
+            statusDistChartInstance.destroy();
+        }
+
+        statusDistChartInstance = new Chart(ctx, {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Répartition des statuts",
+                    data: values,
+                    backgroundColor: ["#e50005", "#9fa0a2", "#e3e4e6"]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    }
+
+    document.getElementById("filters").addEventListener("change", fetchPerformanceData);
+
+    fetchPerformanceData();
+</script>
+
+
+{% endblock %}

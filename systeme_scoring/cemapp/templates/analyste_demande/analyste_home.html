@@ -1,0 +1,68 @@
+{% extends base_template %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/analyste_home.css' %}">
+
+<div class="main-content">
+    <h1>Demandes en Attente</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Numero Credit</th>
+                    <th>Client</th>
+                    <th>Sous-type Crédit</th>
+                    <th>Montant Total</th>
+                    <th>Durée (mois)</th>
+                    <th>Date de Demande</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for demande in page_obj %}
+                    <tr onclick="redirectToEdit({{ demande.id }})">                        
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ demande.numero_credit }}</td>
+                        <td>{{ demande.client.nom }} {{ demande.client.prenom }}</td>
+                        <td>{{ demande.sous_type_credit.nom }}</td>
+                        <td>{{ demande.montant_total }} Ar</td>
+                        <td>{{ demande.duree }}</td>
+                        <td>{{ demande.date_demande|date:"d/m/Y" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8">Aucune demande en attente.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">« Première</a>
+                <a href="?page={{ page_obj.previous_page_number }}">‹ Précédente</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Suivante ›</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Dernière »</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+<script>
+    function redirectToEdit(demandeId) {
+        window.location.href = `/analyste/detailsscoringdemande/${demandeId}/`;
+    }
+</script>
+
+{% endblock %}

@@ -10,16 +10,14 @@
         {% csrf_token %}
 
         <!-- Client -->
-        <div class="mb-3">
+        <div class="mb-3 client-search-container">
             <label for="client" class="form-label">Client</label>
-            <div class="position-relative">
-                <input type="text" id="clientSearch" class="form-control" placeholder="Rechercher un client...">
-                <select id="client" name="client" class="form-select position-absolute top-0" size="5" required>
-                    {% for client in clients %}
-                    <option value="{{ client.id }}">{{ client.nom }} {{ client.prenom }} ({{ client.n_cin }})</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <input type="text" id="clientSearch" class="form-control" placeholder="Rechercher un client...">
+            <select id="client" name="client" class="form-select" required>
+                {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.nom }} {{ client.prenom }} ({{ client.n_cin }})</option>
+                {% endfor %}
+            </select>
         </div>
 
         <!-- Sélection du type de crédit -->
