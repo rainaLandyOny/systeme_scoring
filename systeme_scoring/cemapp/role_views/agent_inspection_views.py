@@ -19,3 +19,13 @@ def agent_inspection_home(request):
     }
     return render(request, 'agent_inspection/agent_inspection_home.html', context)
 
+@login_required
+@user_passes_test(is_agent_inspection)
+def add_rendezvous_inspection(request):
+    pass
+
+@login_required
+@user_passes_test(is_agent_inspection)
+def rapport_inspection(request):
+    pass
+

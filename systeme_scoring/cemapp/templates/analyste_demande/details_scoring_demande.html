@@ -65,37 +65,10 @@
 
     <!-- Boutons pour décider du rendez-vous ou du refus -->
     <div class="action-buttons">
-        <!-- Bouton pour Rendez-vous -->
-        <button class="btn btn-primary" id="openRendezVousModal">Planifier un Rendez-vous</button>
+        <button class="btn btn-primary" id="openRendezVousModal">Approuvé</button>
 
         <!-- Bouton pour Refus -->
         <button class="btn btn-danger" id="openRefusModal">Refuser la Demande</button>
-    </div>
-</div>
-
-<!-- Modal pour ajouter un rendez-vous -->
-<div class="modal" id="modalRendezVous">
-    <div class="modal-content">
-        <span class="close" id="closeRendezVousModal">&times;</span>
-        <h2>Planifier un Rendez-vous</h2>
-        <span class="close" id="closeRefusModal">&times;</span>
-            <h2>Créer un rendez-vous</h2>
-            <form method="post" action="#">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_date_debut_rendezvous">Date de début</label>
-                    <input type="datetime-local" id="id_date_debut_rendezvous" name="date_debut_rendezvous" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_date_fin_rendezvous">Date de fin</label>
-                    <input type="datetime-local" id="id_date_fin_rendezvous" name="date_fin_rendezvous" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_lieu">Lieu</label>
-                    <input type="text" id="id_lieu" name="lieu" required>
-                </div>
-                <button type="submit" class="btn">Enregistrer le rendez-vous</button>
-            </form>
     </div>
 </div>
 
@@ -122,23 +95,10 @@
     </div>
 </div>
 
-<script>
-    // Gestion des modals
-    const openRendezVousModal = document.getElementById('openRendezVousModal');
-    const closeRendezVousModal = document.getElementById('closeRendezVousModal');
-    const modalRendezVous = document.getElementById('modalRendezVous');
-    
+<script>    
     const openRefusModal = document.getElementById('openRefusModal');
     const closeRefusModal = document.getElementById('closeRefusModal');
     const modalRefus = document.getElementById('modalRefus');
-    
-    openRendezVousModal.addEventListener('click', () => {
-        modalRendezVous.style.display = 'block';
-    });
-    
-    closeRendezVousModal.addEventListener('click', () => {
-        modalRendezVous.style.display = 'none';
-    });
     
     openRefusModal.addEventListener('click', () => {
         modalRefus.style.display = 'block';

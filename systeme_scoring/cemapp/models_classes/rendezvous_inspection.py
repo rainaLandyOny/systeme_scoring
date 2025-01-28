@@ -9,8 +9,6 @@ class RendezvousInspection(models.Model):
     demande = models.ForeignKey(DemandeCredit, on_delete=models.CASCADE)
     date_rendezvous = models.DateTimeField()
     termine = models.BooleanField(default=False)
-    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    modification_count = models.PositiveIntegerField(default=0)
     
 def __str__(self):
         return self.lieu
