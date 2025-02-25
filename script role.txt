@@ -1,0 +1,13 @@
+from cemapp.models import CustomUser
+
+directeur= CustomUser.objects.create_user(username="directeuragence", email="directeuragence@gmail.com", password="directeuragence", role="directeur_agence")
+agentinspection = CustomUser.objects.create_user(username="agentinspection", email="agentinspection@gmail.com", password="agentinspection", role="agent_inspection")
+service= CustomUser.objects.create_user(username="serviceclient", email="serviceclient@gmail.com", password="serviceclient", role="service_client")
+gestionnaire = CustomUser.objects.create_user(username="gestionnairedemande", email="gestionnairedemande@gmail.com", password="gestionnairedemande", role="gestionnaire")
+analyste= CustomUser.objects.create_user(username="analystedemande", email="analystedemande@gmail.com", password="analystedemande", role="analyste_demande")
+
+directeur.save()
+agentinspection.save()
+service.save()
+gestionnaire.save()
+analyste.save()
