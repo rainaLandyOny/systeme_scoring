@@ -1,6 +1,7 @@
 import joblib
 import os
 from threading import Lock
+from model_manager import ModelManager
 
 from sklearn.metrics import classification_report
 
@@ -152,3 +153,19 @@ class ModelManager:
             # Générer les métriques
             metrics = classification_report(y_test, y_pred, output_dict=True)
             return metrics
+        
+    def train_model_situation_familiale():
+        model = ModelManager.load_model()
+        pass
+    
+    def train_model_situation_professionnelle():
+        pass
+    
+    def train_model_situation_financiere():
+        pass
+    
+    def train_model_capacite_remboursement():
+        pass
+    
+    def train_model_inspection_environnement():
+        pass
