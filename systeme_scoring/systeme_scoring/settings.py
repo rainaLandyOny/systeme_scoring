@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'celery',
     'cemapp',
 ]
 
@@ -84,6 +86,12 @@ DATABASES = {
     'default': db_config
 }
 
+TIME_ZONE = 'Indian/Antananarivo'
+CELERY_TIMEZONE = TIME_ZONE
+USE_TZ = True
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
