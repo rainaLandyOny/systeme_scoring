@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'systeme_scoring.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-with open('./systeme_scoring/config/db_config.json') as f:
+with open('./systeme_scoring/systeme_scoring/config/db_config.json') as f:
     db_config = json.load(f)
 
 DATABASES = {

@@ -1,7 +1,7 @@
 import joblib
 import os
 from threading import Lock
-from model_manager import ModelManager
+# from model_manager import ModelManager
 
 from sklearn.metrics import classification_report
 

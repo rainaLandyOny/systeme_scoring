@@ -26,12 +26,14 @@ html {
     background-color: var(--main-red);
     color: white;
     transition: width 0.3s ease;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+
+    padding-left: .5rem;
+    padding-right: .5rem;
 }
 
 .sidebar.collapsed {
     width: var(--collapsed-width);
+    padding: 0;
 }
 
 
@@ -47,6 +49,8 @@ html {
     color: white;
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     border-top-right-radius: 10px;
+
+    font-weight: bold;
 }
 
 .logo {
@@ -85,7 +89,8 @@ nav {
 .nav-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    gap: 10px;
     padding: 15px;
     color: white;
     text-decoration: none;
@@ -107,7 +112,6 @@ nav {
 .sidebar.collapsed .nav-text {
     display: none;
 }
-
 
 /* Submenu */
 
@@ -135,7 +139,9 @@ nav {
 /* Submenu Items */
 
 .nav-subitem {
-    display: block;
+    display: flex;
+    gap: 10px;
+    align-items: center;
     padding: 10px 15px;
     color: white;
     text-decoration: none;
@@ -168,7 +174,7 @@ nav {
 
 main.content {
     margin-left: var(--sidebar-width);
-    padding: 20px;
+    padding: 30px;
     transition: margin-left 0.3s ease;
     background-color: var(--main-light);
     min-height: 100vh;
