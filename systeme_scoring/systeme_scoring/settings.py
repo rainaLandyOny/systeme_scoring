@@ -15,7 +15,7 @@ from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+DB_CONFIG_PATH = BASE_DIR / 'systeme_scoring' / 'config' / 'db_config.json'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'systeme_scoring.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-with open('./systeme_scoring/systeme_scoring/config/db_config.json') as f:
+with open(DB_CONFIG_PATH) as f:
     db_config = json.load(f)
 
 DATABASES = {
@@ -94,11 +94,14 @@ CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULE = {
-    'monthly-model-retraining': {
-        'task': 'ml_models.tasks.monthly_retraining',
-        'schedule': crontab(day_of_month='L', hour=22, minute=0),
-        'options': {'timezone': 'Indian/Antananarivo'}
-    },
+    'monthly-retraining': {
+        'task': 'ml.tasks.retrain_all_models',
+        'schedule': crontab(day_of_month='28-31', hour=22, minute=0),
+        'options': {
+            'timezone': 'Indian/Antananarivo',
+            'expires': 60*60*24
+        }
+    }
 }
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
