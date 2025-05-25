@@ -12,3 +12,5 @@ from cemapp.models_classes.agence import Agence
 from cemapp.models_classes.rendezvous_finalisation import RendezvousFinalisation
 from cemapp.models_classes.rendezvous_inspection import RendezvousInspection
 from cemapp.models_classes.inspection_environnement import InspectionEnvironnement
+from cemapp.models_classes.demande_report_echeance import DemandeReportEcheance
+from cemapp.models_classes.message import Messagerie

@@ -73,6 +73,7 @@ class Client(models.Model):
     valeur_actifs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     montant_emprunts_en_cours = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     historique_paiement = models.TextField(blank=True, null=True)
+    isBlackList = models.BooleanField(default=False)
 
     def clean(self):
         if self.situation_professionnelle == 'sans_emploi':

@@ -1,6 +1,7 @@
 from django.db import models
 
 class Agence(models.Model):
+    n_identification = models.CharField(max_length=255)
     lieu = models.CharField(max_length=255)
     adresse = models.CharField(max_length=255)
     telephone = models.CharField(max_length=13)
