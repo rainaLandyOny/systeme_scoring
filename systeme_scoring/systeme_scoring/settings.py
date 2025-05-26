@@ -94,11 +94,14 @@ CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULE = {
-    'monthly-model-retraining': {
-        'task': 'ml_models.tasks.monthly_retraining',
-        'schedule': crontab(day_of_month='L', hour=22, minute=0),
-        'options': {'timezone': 'Indian/Antananarivo'}
-    },
+    'monthly-retraining': {
+        'task': 'ml.tasks.retrain_all_models',
+        'schedule': crontab(day_of_month='28-31', hour=22, minute=0),
+        'options': {
+            'timezone': 'Indian/Antananarivo',
+            'expires': 60*60*24
+        }
+    }
 }
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
