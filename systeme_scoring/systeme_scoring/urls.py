@@ -16,13 +16,13 @@ urlpatterns = [
     path('directeuragence/performanceemploye/', directeur_agence_views.performance_employes, name='performanceemployes'),
     path('directeuragence/gestionemployes/', directeur_agence_views.gestion_employes, name='gestionemployes'),
     path('api/get_performance_employes/', directeur_agence_views.get_performance_employes, name="getperformanceemployes"),
+    path('directeuragence/listerendezvous/', directeur_agence_views.liste_rendez_vous, name='listerendezvous'),
     #analyste_demande
     path('analyste/', analyste_demande_views.analyste_home, name='analyste_home'),
     path('analyste/detailsscoringdemande/<int:demande_id>/', analyste_demande_views.details_demande, name='detailsscoringdemande'),
     path("feature-importance", analyste_demande_views.feature_importance_page, name="feature_importance_page"),
     path("get-feature-importances", analyste_demande_views.get_feature_importances, name="get_feature_importances"),
     path("update-feature-importances", analyste_demande_views.update_feature_importances, name="update_feature_importances"),
-    path('analyste/listerendezvous/', analyste_demande_views.liste_rendez_vous, name='listerendezvous'),
     #agent_inspection
     path('agentinspection/', agent_inspection_views.agent_inspection_home, name='agent_inspection_home'),
     #gestionnaire_demande

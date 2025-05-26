@@ -6,45 +6,60 @@
 
 <div class="main-content">
     <h1>Demandes en Attente</h1>
+    
     <div class="table-container">
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Numero Credit</th>
+                    <th>Numéro Crédit</th>
                     <th>Client</th>
-                    <th>Sous-type Crédit</th>
-                    <th>Montant Total</th>
-                    <th>Durée (mois)</th>
-                    <th>Date de Demande</th>
+                    <th>Type de Crédit</th>
+                    <th>Montant</th>
+                    <th>Durée</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for demande in page_obj %}
                     <tr onclick="redirectToEdit({{ demande.id }})">                        
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ demande.numero_credit }}</td>
+                        <td class="highlight">{{ demande.numero_credit }}</td>
                         <td>{{ demande.client.nom }} {{ demande.client.prenom }}</td>
                         <td>{{ demande.sous_type_credit.nom }}</td>
-                        <td>{{ demande.montant_total }} Ar</td>
-                        <td>{{ demande.duree }}</td>
+                        <td>{{ demande.montant_total|floatformat:0 }} Ar</td>
+                        <td>{{ demande.duree }} mois</td>
                         <td>{{ demande.date_demande|date:"d/m/Y" }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="8">Aucune demande en attente.</td>
+                        <td colspan="7" class="no-data">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9d9ea0" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <p>Aucune demande en attente</p>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Pagination -->
+    <!-- Pagination améliorée -->
     <div class="pagination">
-        <span class="step-links">
+        <div class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">« Première</a>
-                <a href="?page={{ page_obj.previous_page_number }}">‹ Précédente</a>
+                <a href="?page=1" title="Première page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}" title="Page précédente">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M15 18l-6-6 6-6"></path>
+                    </svg>
+                </a>
             {% endif %}
 
             <span class="current">
@@ -52,16 +67,30 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Suivante ›</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Dernière »</a>
+                <a href="?page={{ page_obj.next_page_number }}" title="Page suivante">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 18l6-6-6-6"></path>
+                    </svg>
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" title="Dernière page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             {% endif %}
-        </span>
+        </div>
     </div>
 </div>
 
 <script>
     function redirectToEdit(demandeId) {
-        window.location.href = `/analyste/detailsscoringdemande/${demandeId}/`;
+        const row = event.currentTarget;
+        row.style.opacity = '0.7';
+        row.style.backgroundColor = 'rgba(229, 0, 5, 0.05)';
+        
+        setTimeout(() => {
+            window.location.href = `/analyste/detailsscoringdemande/${demandeId}/`;
+        }, 200);
     }
 </script>
 

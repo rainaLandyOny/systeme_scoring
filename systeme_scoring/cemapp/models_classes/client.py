@@ -71,7 +71,6 @@ class Client(models.Model):
     secteur_activite = models.CharField(max_length=100, choices=SECTEUR_ACTIVITE_CHOICES, blank=True, null=True)
     type_contrat = models.CharField(max_length=50, choices=TYPE_CONTRAT_CHOICES, blank=True, null=True)
     valeur_actifs = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    montant_emprunts_en_cours = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     historique_paiement = models.TextField(blank=True, null=True)
     isBlackList = models.BooleanField(default=False)
 
@@ -107,7 +106,7 @@ class Client(models.Model):
 
         if total_remboursements == 0:
             score_ponctualite = 0  # Aucun historique = score 0
-            niveau_ponctualite = "Non applicable (aucune demande terminée)"
+            niveau_ponctualite = "N/A"
         elif taux_retards <= 10:
             score_ponctualite = 90  # Ponctuel
             niveau_ponctualite = "Ponctuel"

@@ -54,6 +54,7 @@ class DemandeCredit(models.Model):
             encoder_situation_professionnelle = model_manager.load_encoder("situation_professionnelle")
             encoder_type_contrat = model_manager.load_encoder("type_contrat")
             encoder_situation_bancaire = model_manager.load_encoder("situation_bancaire")
+            encoder_capacite_remboursement = model_manager.load_encoder("capacite_remboursement")
 
             # Chargement des modèles
             model_situation_familiale = model_manager.load_model("situation_familiale",user)
@@ -83,9 +84,13 @@ class DemandeCredit(models.Model):
             encoded_profession = encoder_situation_professionnelle.transform([[profession_key]])[0][0]
             encoded_contract_type = encoder_type_contrat.transform([[contract_type_key]])[0][0]
 
+            duree_emploie = client.duree_emploie
+            if(duree_emploie is None):
+                duree_emploie = 0
+             
             profession_data = pd.DataFrame({
                 'situation_professionnelle': [encoded_profession],
-                'duree_emploie': [client.duree_emploie],
+                'duree_emploie': duree_emploie,
                 'revenu_mensuel': [client.revenu_mensuel],
                 'secteur_activite': [activity_sector_key],
                 'type_contrat': [encoded_contract_type]
@@ -97,7 +102,6 @@ class DemandeCredit(models.Model):
             # Réindexation des colonnes attendues par le modèle
             expected_columns = ['situation_professionnelle', 'duree_emploie', 'revenu_mensuel', 'secteur_activite', 'type_contrat']
             profession_data = profession_data.reindex(columns=expected_columns, fill_value=0)
-
             # Prédiction avec le modèle
             scores["Situation professionnelle"] = model_situation_professionnelle.predict(profession_data)[0]
 
@@ -107,7 +111,7 @@ class DemandeCredit(models.Model):
             )
             encoded_financial_status = encoder_situation_bancaire.transform([[financial_status_key]])[0][0]
             scores["Situation financière"] = model_situation_financiere.predict([
-                [client.revenu_mensuel, client.depense_mensuelles, client.dettes_existantes, client.nbr_dependant, client.duree_emploie, encoded_financial_status]
+                [client.revenu_mensuel, client.depense_mensuelles, client.dettes_existantes, client.nbr_dependant, duree_emploie, encoded_financial_status]
             ])[0]
 
             # Capacité de remboursement
@@ -118,15 +122,15 @@ class DemandeCredit(models.Model):
                 self.montant_total, 
                 self.sous_type_credit.taux_interet,
             ]
-            scores["Capacité de remboursement"] = model_capacite_remboursement.predict([repayment_capacity_data])[0]
-
+            scores["Capacité de remboursement"] = model_capacite_remboursement.predict([repayment_capacity_data])
+            scores["Capacité de remboursement"] = encoder_capacite_remboursement.inverse_transform(scores["Capacité de remboursement"])[0]
             # Calcul final des scores
             scores_dict = {
-                "Situation familiale": scores["Situation familiale"],
-                "Situation professionnelle": scores["Situation professionnelle"],
-                "Situation financière": scores["Situation financière"],
-                "Ponctualité": client.calculer_ponctualite(),
-                "Capacité de remboursement": scores["Capacité de remboursement"],
+                "situation_familiale": scores["Situation familiale"],
+                "situation_professionnelle": scores["Situation professionnelle"],
+                "situation_financiere": scores["Situation financière"],
+                "ponctualite": client.calculer_ponctualite(),
+                "capacite_remboursement": scores["Capacité de remboursement"],
             }
 
             return scores_dict

@@ -6,9 +6,7 @@
 
 <div class="details-container">
     <h1>Détails du Scoring de la Demande</h1>
-
-    <div class="section">
-        <h2>Informations sur le Client</h2>
+    <div class="clientcredit">
         <table class="details-table">
             <tr>
                 <th>Nom</th>
@@ -31,10 +29,6 @@
                 <td>{{ client.adresse }}</td>
             </tr>
         </table>
-    </div>
-
-    <div class="section">
-        <h2>Informations sur la Demande</h2>
         <table class="details-table">
             <tr>
                 <th>Montant Total</th>
@@ -50,62 +44,111 @@
             </tr>
         </table>
     </div>
-
-    <div class="section">
-        <h2>Scores Calculés</h2>
-        <table class="scores-table">
-            {% for score_label, score_value in scores.items %}
+    <div class="familiale score-card">
+        <h2>Situation familiale</h2>
+        <div class="score-value">{{ scores.situation_familiale|floatformat:0 }}/100</div>
+        <div class="score-bar">
+            <div class="bar-fill" style="width: {{ scores.situation_familiale }}%"></div>
+        </div>
+        <div class="score-tooltip">
+            <h3>Critères évalués :</h3>
+            <ul>
+                <li>État civil : {{ client.statut_familial }}</li>
+                <li>Nombre de dépendant : {{ client.nbr_dependant }}</li>
+                <li>Age : {{ client.age }}</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="professionnelle score-card">
+        <h2>Situation professionnelle</h2>
+        <div class="score-value">{{ scores.situation_professionnelle|floatformat:0 }}/100</div>
+        <div class="score-bar">
+            <div class="bar-fill" style="width: {{ scores.situation_professionnelle }}%"></div>
+        </div>
+    </div>
+    
+    <div class="financiere score-card">
+        <h2>Situation financière</h2>
+        <div class="score-value">{{ scores.situation_financiere|floatformat:0 }}/100</div>
+        <div class="score-bar">
+            <div class="bar-fill" style="width: {{ scores.situation_financiere }}%"></div>
+        </div>
+    </div>
+    
+    <div class="capaciteremboursement score-card">
+        <h2>Capacité de remboursement</h2>
+        <div class="score-text">{{ scores.capacite_remboursement }}</div>
+    </div>
+    
+    <div class="inspectionenvironnement score-card">
+        <h2>Inspection de l'environnement</h2>
+        <div class="score-value">{{ scores.inspection|default:'-' }}</div>
+        {% if scores.inspection %}
+        <div class="score-bar">
+            <div class="bar-fill" style="width: {{ scores.inspection }}%"></div>
+        </div>
+        <div class="score-label">{{ scores.inspection|floatformat:0 }}/100</div>
+        {% else %}
+        <div class="score-missing">Non renseigné</div>
+        {% endif %}
+    </div>
+    
+    <div class="ponctualite score-card">
+        <h2>Ponctualité</h2>
+        <table>
             <tr>
-                <th>{{ score_label }}</th>
-                <td>{{ score_value }}</td>
+                <td><strong>Score :</strong></td>
+                <td>{{ scores.ponctualite.score }}</td>
             </tr>
-            {% endfor %}
+            <tr>
+                <td><strong>Niveau :</strong></td>
+                <td>{{ scores.ponctualite.niveau }}</td>
+            </tr>
+            <tr>
+                <td><strong>Taux retards :</strong></td>
+                <td>{{ scores.ponctualite.taux_retards }}%</td>
+            </tr>
+            <tr>
+                <td><strong>Retard moyen :</strong></td>
+                <td>{{ scores.ponctualite.retard_moyen }}</td>
+            </tr>
         </table>
     </div>
-
-    <!-- Boutons pour décider du rendez-vous ou du refus -->
     <div class="action-buttons">
-        <!-- Bouton pour Rendez-vous -->
         <button class="btn btn-primary" id="openRendezVousModal">Planifier un Rendez-vous</button>
-
-        <!-- Bouton pour Refus -->
         <button class="btn btn-danger" id="openRefusModal">Refuser la Demande</button>
     </div>
 </div>
-
-<!-- Modal pour ajouter un rendez-vous -->
 <div class="modal" id="modalRendezVous">
     <div class="modal-content">
         <span class="close" id="closeRendezVousModal">&times;</span>
         <h2>Planifier un Rendez-vous</h2>
-        <span class="close" id="closeRefusModal">&times;</span>
-            <h2>Créer un rendez-vous</h2>
-            <form method="post" action="#">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_date_debut_rendezvous">Date de début</label>
-                    <input type="datetime-local" id="id_date_debut_rendezvous" name="date_debut_rendezvous" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_date_fin_rendezvous">Date de fin</label>
-                    <input type="datetime-local" id="id_date_fin_rendezvous" name="date_fin_rendezvous" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_lieu">Lieu</label>
-                    <input type="text" id="id_lieu" name="lieu" required>
-                </div>
-                <button type="submit" class="btn">Enregistrer le rendez-vous</button>
-            </form>
+        <form method="post" action="#">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_date_debut_rendezvous">Date de début</label>
+                <input type="datetime-local" id="id_date_debut_rendezvous" name="date_debut_rendezvous" required>
+            </div>
+            <div class="form-group">
+                <label for="id_date_fin_rendezvous">Date de fin</label>
+                <input type="datetime-local" id="id_date_fin_rendezvous" name="date_fin_rendezvous" required>
+            </div>
+            <div class="form-group">
+                <label for="id_lieu">Lieu</label>
+                <input type="text" id="id_lieu" name="lieu" required>
+            </div>
+            <button type="submit" class="btn btn-submit">Enregistrer le rendez-vous</button>
+        </form>
     </div>
 </div>
 
-<!-- Modal pour choisir la raison du refus -->
 <div class="modal" id="modalRefus">
     <div class="modal-content">
         <span class="close" id="closeRefusModal">&times;</span>
         <h2>Raison du Refus</h2>
         <form id="refusForm">
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="raisonRefus" class="form-label">Raison du Refus</label>
                 <select class="form-select" id="raisonRefus" required>
                     <option value="score_inferieur">Score trop faible</option>
@@ -113,7 +156,7 @@
                     <option value="autre">Autre</option>
                 </select>
             </div>
-            <div class="mb-3" id="autreRaison" style="display: none;">
+            <div class="form-group" id="autreRaison" style="display: none;">
                 <label for="detailsRefus" class="form-label">Détails supplémentaires</label>
                 <textarea class="form-control" id="detailsRefus"></textarea>
             </div>
@@ -121,9 +164,13 @@
         </form>
     </div>
 </div>
-
 <script>
-    // Gestion des modals
+    document.querySelectorAll('.score-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    });
+    
     const openRendezVousModal = document.getElementById('openRendezVousModal');
     const closeRendezVousModal = document.getElementById('closeRendezVousModal');
     const modalRendezVous = document.getElementById('modalRendezVous');
@@ -148,7 +195,6 @@
         modalRefus.style.display = 'none';
     });
     
-    // Affichage du champ "Autre" dans le modal de refus
     document.getElementById('raisonRefus').addEventListener('change', function() {
         const autreRaison = document.getElementById('autreRaison');
         if (this.value === 'autre') {
@@ -158,7 +204,6 @@
         }
     });
 
-    // Fermer les modals si on clique en dehors d'eux
     window.addEventListener('click', function(event) {
         if (event.target === modalRendezVous) {
             modalRendezVous.style.display = 'none';
@@ -170,3 +215,4 @@
 </script>
 
 {% endblock %}
+    

@@ -3,8 +3,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
+from django.core.paginator import Paginator
 from reportlab.pdfgen import canvas
 from django.db.models import Sum, Count, Q
+
+from ..models_classes.rendezvous_finalisation import RendezvousFinalisation
 from ..models_classes.demande_credit import DemandeCredit
 from ..models_classes.client import Client
 from ..models_classes.custom_user import CustomUser
@@ -46,6 +49,21 @@ def directeur_home(request):
         "benefice_mois": benefice_mois,
     }
     return render(request, "directeur_agence/directeur_home.html", context)
+
+@login_required
+@user_passes_test(is_directeur_agence)  
+def liste_rendez_vous(request):
+    rendezvous = RendezvousFinalisation.objects.filter(analyste=request.user).filter(termine=False).order_by('date_debut_rendezvous')
+
+    paginator = Paginator(rendezvous, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+    }
+    
+    return render(request, "analyste_demande/liste_rendez_vous.html", {"rendezvous": context})
 
 @login_required
 @user_passes_test(is_directeur_agence)

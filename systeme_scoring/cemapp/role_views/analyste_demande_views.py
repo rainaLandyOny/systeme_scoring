@@ -3,7 +3,6 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-import joblib
 from sklearn.base import ClassifierMixin, RegressorMixin
 from sklearn.metrics import f1_score, mean_squared_error, precision_score, recall_score,accuracy_score,r2_score
 from systeme_scoring import settings
@@ -214,21 +213,6 @@ def refus_demande(request, demande_id):
         return redirect('detail_demande', demande_id=demande_id)
 
     return HttpResponse("Erreur : méthode non autorisée", status=405)
-
-@login_required
-@user_passes_test(is_analyste)  
-def liste_rendez_vous(request):
-    rendezvous = RendezvousFinalisation.objects.filter(analyste=request.user).filter(termine=False).order_by('date_debut_rendezvous')
-
-    paginator = Paginator(rendezvous, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-    }
-    
-    return render(request, "analyste_demande/liste_rendez_vous.html", {"rendezvous": context})
 
 @login_required
 @user_passes_test(is_analyste)  

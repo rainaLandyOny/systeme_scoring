@@ -1,60 +1,136 @@
+:root {
+    --main-red: #e50005;
+    --main-grey: #9d9ea0;
+    --light-grey: #e3e4e6;
+    --dark-text: #2c3e50;
+}
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+    color: var(--dark-text);
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--main-red);
+}
+
 .table-container {
-    margin: 20px 0;
+    margin: 30px 0;
     overflow-x: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: white;
+    padding: 15px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff;
-    margin: 20px 0;
-    font-size: 1rem;
-    text-align: left;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.95rem;
 }
 
 table th,
 table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--light-grey);
 }
 
 table th {
-    background-color: var(--main-grey);
+    background-color: var(--main-red);
     color: white;
-    text-transform: uppercase;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+table tr {
+    transition: all 0.2s ease;
 }
 
 table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #fafafa;
 }
 
 table tr:hover {
-    background-color: rgba(255, 0, 5, 0.1);
+    background-color: rgba(229, 0, 5, 0.08);
+    transform: translateX(2px);
+    cursor: pointer;
 }
 
+
+/* Pagination améliorée */
+
 .pagination {
-    margin: 20px 0;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+    gap: 10px;
+}
+
+.pagination .step-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .pagination .step-links a {
     color: var(--main-red);
     text-decoration: none;
-    margin: 0 5px;
-    padding: 5px 10px;
+    padding: 8px 15px;
     border: 1px solid var(--main-red);
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .pagination .step-links a:hover {
     background-color: var(--main-red);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(229, 0, 5, 0.2);
 }
 
 .pagination .current {
-    font-weight: bold;
-    color: var(--main-red);
-    padding: 5px 10px;
+    font-weight: 600;
+    color: var(--dark-text);
+    padding: 8px 15px;
+    background-color: var(--light-grey);
+    border-radius: 5px;
+}
+
+
+/* Message quand pas de données */
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--main-grey);
+    font-style: italic;
+}
+
+
+/* Effet de chargement optionnel */
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(229, 0, 5, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--main-red);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

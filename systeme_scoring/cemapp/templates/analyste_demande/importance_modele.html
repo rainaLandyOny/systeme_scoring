@@ -1,239 +1,288 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier l'Importance des Colonnes</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/distribute/nouislider.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/nouislider@15.6.1/distribute/nouislider.min.css">
-    <style>
-        .slider-container {
-            margin: 20px 0;
-        }
-        .slider-label {
-            font-weight: bold;
-        }
-        .metrics-table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .metrics-table th, .metrics-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .metrics-table th {
-            background-color: #f2f2f2;
-        }
-        #notification {
-            display: none;
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-        }
-        #notification.success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-        #notification.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
-    </style>
-</head>
-<body>
-    <h1>Modifier l'Importance des Colonnes</h1>
+{% extends base_template %}
+{% block content %}
+{% load static %}
 
-    <!-- Notifications -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-color: #e50005;
+        --secondary-color: #9d9ea0;
+        --light-bg: #e3e4e6;
+        --dark-text: #2c3e50;
+    }
+    
+    .compact-container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 15px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: calc(100vh - 100px);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    h1 {
+        color: var(--dark-text);
+        text-align: center;
+        margin: 0 0 15px 0;
+        font-size: 1.5rem;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--primary-color);
+    }
+    
+    .control-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    
+    label {
+        font-weight: 600;
+        color: var(--dark-text);
+        white-space: nowrap;
+    }
+    
+    select {
+        padding: 8px 12px;
+        border: 1px solid var(--secondary-color);
+        border-radius: 5px;
+        background-color: white;
+        font-size: 14px;
+        min-width: 200px;
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .btn i.material-icons {
+        margin-right: 6px;
+        font-size: 18px;
+    }
+    
+    .chart-wrapper {
+        flex: 1;
+        min-height: 0;
+        background-color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    #notification {
+        display: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin: 10px auto;
+        font-size: 14px;
+        font-weight: 500;
+        background-color: rgba(229, 0, 5, 0.1);
+        color: var(--primary-color);
+        text-align: center;
+        max-width: 80%;
+    }
+
+    .metrics-container {
+        margin-top: 15px;
+        font-size: 13px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .metric-card {
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .metric-name {
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .metric-value {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+</style>
+
+<div class="compact-container">
+    <h1>Importance des Colonnes</h1>
+
     <div id="notification"></div>
 
-    <div>
-        <label for="model-key">Modèle:</label>
+    <div class="control-row">
+        <label for="model-key">Modèle :</label>
         <select id="model-key">
             <option value="situation_familiale">Situation Familiale</option>
             <option value="situation_professionnelle">Situation Professionnelle</option>
             <option value="situation_financiere">Situation Financière</option>
-            <option value="capacite_remboursement">Capacité de Remboursement</option>            
-            <option value="inspection_environnement">Inspection de l' environnement de travail</option>
+            <option value="capacite_remboursement">Capacité Remboursement</option>            
+            <option value="inspection_environnement">Inspection Environnement</option>
         </select>
+        
+        <button id="load-button" class="btn">
+            <i class="material-icons">insert_chart</i> Charger
+        </button>
     </div>
-    <button id="load-button">Charger les Importances</button>
 
-    <!-- Tableau des métriques -->
-    <table class="metrics-table" id="metrics-table" style="display: none;">
-        <thead>
-            <tr>
-                <th>Métrique</th>
-                <th>Valeur</th>
-            </tr>
-        </thead>
-        <tbody id="metrics-body">
-        </tbody>
-    </table>
+    <div class="chart-wrapper">
+        <canvas id="feature-chart"></canvas>
+    </div>
 
-    <canvas id="feature-chart" width="400" height="200"></canvas>
+    <div id="metrics-display" class="metrics-container" style="display: none;"></div>
+</div>
 
-    <div id="sliders-container"></div>
-    <button id="update-button">Mettre à jour les Importances</button>
+<script>
+    const loadButton = document.getElementById('load-button');
+    const featureChart = document.getElementById('feature-chart').getContext('2d');
+    const notification = document.getElementById('notification');
+    const metricsDisplay = document.getElementById('metrics-display');
+    let chart = null;
 
-    <script>
-        const loadButton = document.getElementById('load-button');
-        const updateButton = document.getElementById('update-button');
-        const slidersContainer = document.getElementById('sliders-container');
-        const featureChart = document.getElementById('feature-chart').getContext('2d');
-        const metricsTable = document.getElementById('metrics-table');
-        const metricsBody = document.getElementById('metrics-body');
-        const notification = document.getElementById('notification');
-        let chart = null;
+    function resizeChart() {
+        const canvas = document.getElementById('feature-chart');
+        const container = document.querySelector('.chart-wrapper');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        if (chart) chart.update();
+    }
 
-        let featureData = [];
+    window.addEventListener('load', resizeChart);
+    window.addEventListener('resize', resizeChart);
 
-        // Afficher un message de notification
-        function showNotification(message, type = 'success') {
-            notification.textContent = message;
-            notification.className = '';
-            notification.classList.add(type === 'success' ? 'success' : 'error');
-            notification.style.display = 'block';
+    function showNotification(message, isError = false) {
+        notification.textContent = message;
+        notification.style.backgroundColor = isError ? 'rgba(244, 67, 54, 0.1)' : 'rgba(76, 175, 80, 0.1)';
+        notification.style.color = isError ? '#f44336' : '#4CAF50';
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
 
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
+    function displayMetrics(metrics) {
+        metricsDisplay.innerHTML = '';
+        metricsDisplay.style.display = 'grid';
+        
+        for (const [name, value] of Object.entries(metrics)) {
+            const metricCard = document.createElement('div');
+            metricCard.className = 'metric-card';
+            metricCard.innerHTML = `
+                <div class="metric-name">${name.replace('_', ' ')}</div>
+                <div class="metric-value">${value?.toFixed?.(4) || 'N/A'}</div>
+            `;
+            metricsDisplay.appendChild(metricCard);
         }
+    }
 
-        // Charger les données du modèle
-        loadButton.addEventListener('click', () => {
-            const modelKey = document.getElementById('model-key').value;
+    loadButton.addEventListener('click', async () => {
+        const modelKey = document.getElementById('model-key').value;
+        loadButton.disabled = true;
+        loadButton.innerHTML = `<i class="material-icons">hourglass_empty</i> Chargement...`;
 
-            fetch(`/get-feature-importances?model_key=${modelKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        showNotification(`Erreur : ${data.error}`, 'error');
-                    } else {
-                        // Charger les données de la colonne
-                        featureData = data.column_importances.map((importance, index) => ({
-                            feature: `Feature ${index + 1}`, // Placeholder, utilisez des noms réels si disponibles
-                            importance: importance
-                        }));
-
-                        // Charger les métriques
-                        updateMetrics(data.metrics);
-                        updateChart();
-                        renderSliders();
-                        showNotification("Données chargées avec succès !");
-                    }
-                })
-                .catch(() => showNotification("Une erreur est survenue lors du chargement des données.", "error"));
-        });
-
-        // Mettre à jour les métriques
-        function updateMetrics(metrics) {
-            metricsBody.innerHTML = '';
-            metricsTable.style.display = 'table';
-
-            for (const [metric, value] of Object.entries(metrics)) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${metric}</td>
-                    <td>${value !== null ? value.toFixed(2) : 'N/A'}</td>
-                `;
-                metricsBody.appendChild(row);
+        try {
+            const response = await fetch(`/get-feature-importances?model_key=${modelKey}`);
+            const data = await response.json();
+            
+            if (!data.data) {
+                throw new Error("Format de données inattendu");
             }
+
+            // Extraire les features et importances
+            const features = data.data.map(item => item.feature);
+            const importances = data.data.map(item => item.importance);
+            
+            updateChart(features, importances);
+            
+            // Afficher les métriques si elles existent
+            if (data.metrics) {
+                displayMetrics(data.metrics);
+            }
+            
+            showNotification("Données chargées avec succès");
+        } catch (error) {
+            console.error("Erreur:", error);
+            showNotification(`Erreur: ${error.message}`, true);
+        } finally {
+            loadButton.disabled = false;
+            loadButton.innerHTML = `<i class="material-icons">insert_chart</i> Charger`;
         }
+    });
 
-        // Mettre à jour le graphique
-        function updateChart() {
-            const labels = featureData.map(d => d.feature);
-            const values = featureData.map(d => d.importance);
+    function updateChart(features, importances) {
+        const formattedFeatures = features.map(f => 
+            f.replace(/_/g, ' ')
+             .replace(/\b\w/g, l => l.toUpperCase())
+        );
 
-            if (chart) chart.destroy();
+        if (chart) chart.destroy();
 
-            chart = new Chart(featureChart, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Importance des Colonnes',
-                        data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
+        chart = new Chart(featureChart, {
+            type: 'bar',
+            data: {
+                labels: formattedFeatures,
+                datasets: [{
+                    data: importances,
+                    backgroundColor: 'rgba(229, 0, 5, 0.7)',
+                    borderColor: 'rgba(229, 0, 5, 1)',
+                    borderWidth: 1,
+                    borderRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `Importance: ${ctx.raw.toFixed(4)}`
+                        }
+                    }
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Valeur d'importance"
+                        }
+                    },
+                    x: { 
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        },
+                        title: {
+                            display: true,
+                            text: "Colonnes"
                         }
                     }
                 }
-            });
-        }
-
-        // Rendre les curseurs
-        function renderSliders() {
-            slidersContainer.innerHTML = '';
-            featureData.forEach((feature, index) => {
-                const sliderDiv = document.createElement('div');
-                sliderDiv.className = 'slider-container';
-
-                const label = document.createElement('label');
-                label.className = 'slider-label';
-                label.textContent = feature.feature;
-
-                const slider = document.createElement('div');
-                slider.id = `slider-${index}`;
-
-                sliderDiv.appendChild(label);
-                sliderDiv.appendChild(slider);
-                slidersContainer.appendChild(slider);
-
-                noUiSlider.create(slider, {
-                    start: feature.importance,
-                    range: { min: 0, max: 1 },
-                    step: 0.01,
-                    tooltips: true
-                });
-
-                slider.noUiSlider.on('update', (values, handle) => {
-                    featureData[index].importance = parseFloat(values[0]);
-                    updateChart();
-                });
-            });
-        }
-
-        // Sauvegarder les modifications
-        updateButton.addEventListener('click', () => {
-            const modelKey = document.getElementById('model-key').value;
-            const updatedImportances = {};
-
-            featureData.forEach(feature => {
-                updatedImportances[feature.feature] = feature.importance;
-            });
-
-            fetch(`/update-feature-importances`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    model_key: modelKey,
-                    updated_importances: JSON.stringify(updatedImportances)
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showNotification("Importances mises à jour avec succès !");
-                    } else {
-                        showNotification(`Erreur : ${data.error}`, 'error');
-                    }
-                })
-                .catch(() => showNotification("Une erreur est survenue lors de la mise à jour.", "error"));
+            }
         });
-    </script>
-</body>
-</html>
+    }
+</script>
+{% endblock %}

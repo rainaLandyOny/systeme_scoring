@@ -42,7 +42,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 models = {
     "Linear Regression": LinearRegression(),
     "Gradient Boosting": GradientBoostingRegressor(random_state=42),
-    "Support Vector Regressor": SVR(kernel='rbf'),
     "K-Neighbors Regressor": KNeighborsRegressor(n_neighbors=5)
 }
 
