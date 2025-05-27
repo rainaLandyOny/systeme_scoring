@@ -3,20 +3,20 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/gestionnaire_demandes.css' %}">
+<link rel="stylesheet" href="{% static 'css/formulaire_demande.css' %}">
+<div class="page-wrapper">
+
+<div class="header-container">
+    <h1 class="page-title">Gestion des Demandes</h1>
+    <div class="action-bar">
+        <input type="text" id="search" class="form-control" placeholder="Recherchez par client, numéro de crédit, ou statut...">
+        <button id="addDemandeButton">Ajouter une Demande</button>
+    </div>
+</div>
 
 <div class="container">
-    <h2>Gestion des Demandes</h2>
-
-    <div class="text-right mb-3">
-        <a href="{% url 'nouvelledemande' %}" class="btn btn-success">Nouvelle Demande</a>
-    </div>
-
-    <div class="form-group">
-        <label for="search">Rechercher une demande :</label>
-        <input type="text" id="search" class="form-control" placeholder="Recherchez par client, numéro de crédit, ou statut...">
-    </div>
-
-    <table class="table table-striped mt-3">
+    <div class="table-wrapper">
+    <table class="styled-table">
         <thead>
             <tr>
                 <th>Numéro de Crédit</th>
@@ -28,7 +28,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="table-content">
+        <tbody>
             {% for demande in demandes %}
             <tr>
                 <td>{{ demande.numero_credit }}</td>
@@ -42,18 +42,95 @@
                         <a href="{% url 'modifiedemande' demande.id %}" class="btn btn-primary btn-sm">Modifier</a>
                     {% elif demande.statut_demande == 'approuve' %}
                         <a href="{% url 'payementdemande' demande.id %}" class="btn btn-success btn-sm">Effectuer le paiement</a>
-                    {% elif demande.statut_demande == 'en_attente_signature' or demande.statut_demande == 'refuse' %}
                     {% else %}
                         <span class="text-muted">Aucune action disponible</span>
                     {% endif %}
                 </td>
             </tr>
             {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">Aucune demande trouvée.</td>
-            </tr>
+            <tr><td colspan="7" class="text-center">Aucune demande trouvée.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="demandeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('demandeModal')">&times;</span>
+        <h2>Nouvelle Demande de Crédit</h2>
+        <form method="post" action="{% url 'nouvelledemande' %}">
+            {% csrf_token %}
+            <div class="form-section">
+                <label for="client">Client</label>
+                <input type="text" id="clientSearch" placeholder="Rechercher un client...">
+                <select id="client" name="client" required>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.nom }} {{ client.prenom }} ({{ client.n_cin }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="type_credit">Type de Crédit</label>
+                <select id="type_credit">
+                    <option value="" selected disabled>-- Sélectionner --</option>
+                    {% for type_credit in types_credit %}
+                    <option value="{{ type_credit.id }}">{{ type_credit.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="sous_type_credit">Sous-Type</label>
+                <select id="sous_type_credit" name="sous_type_credit" disabled>
+                    <option value="" selected disabled>-- Sélectionner --</option>
+                </select>
+                <small id="credit_limits" class="form-text text-muted"></small>
+            </div>
+
+            <div class="form-section">
+                <label for="duree">Durée (mois)</label>
+                <input type="number" name="duree" id="duree" required>
+            </div>
+
+            <div class="form-section">
+                <label for="montant_total">Montant Total</label>
+                <input type="number" name="montant_total" id="montant_total" step="0.01" required>
+            </div>
+
+            <div class="form-section">
+                <label for="motif_credit">Motif</label>
+                <textarea name="motif_credit" id="motif_credit" rows="4"></textarea>
+            </div>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <button type="submit" class="btn-save">Créer la Demande</button>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/demande_credit.js' %}"></script>
+<script>
+    document.getElementById("addDemandeButton").addEventListener("click", function() {
+        document.getElementById("demandeModal").style.display = "block";
+        document.body.classList.add("modal-open");  // Ajout pour flouter le fond
+    });
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+        document.body.classList.remove("modal-open");  // Suppression du flou
+    }
+</script>
+
+
 {% endblock %}

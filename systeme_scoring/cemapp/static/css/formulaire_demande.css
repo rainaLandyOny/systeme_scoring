@@ -1,0 +1,168 @@
+/* Effet de flou quand la modale est ouverte */
+
+body.modal-open .page-wrapper {
+    filter: blur(5px);
+    pointer-events: none;
+    user-select: none;
+    transition: filter 0.3s ease;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+
+/* Overlay de la modale */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+
+/* Contenu de la modale */
+
+.modal-content {
+    background-color: white;
+    margin: 4% auto;
+    padding: 20px 30px;
+    border-radius: 12px;
+    width: 480px;
+    max-width: 95%;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Titre de la modale */
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.6rem;
+}
+
+
+/* Sections de formulaire */
+
+.form-section {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Libellé */
+
+.form-section label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #444;
+}
+
+
+/* Champs de saisie communs */
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    max-width: 100%;
+}
+
+
+/* Focus sur les champs */
+
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    outline: none;
+    border-color: #e50005;
+    box-shadow: 0 0 0 2px rgba(229, 0, 5, 0.2);
+}
+
+
+/* Organisation du formulaire */
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* Alignement du bouton */
+
+.btn-save {
+    background-color: #e50005;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    align-self: flex-end;
+    cursor: pointer;
+    margin-right: 4%;
+}
+
+.btn-save:hover {
+    background-color: #c40004;
+}
+
+
+/* Bouton de fermeture */
+
+.close {
+    position: absolute;
+    top: 18px;
+    right: 25px;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+}
+
+
+/* Messages d'erreur */
+
+.messages {
+    list-style: none;
+    padding-left: 0;
+    color: red;
+    font-weight: bold;
+}
+
+
+/* Spécificité sur la largeur des champs */
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content textarea {
+    width: 90%;
+}
+
+.modal-content select {
+    width: 95%;
+}
+
+#duree,
+#montant_total {
+    width: 90%;
+}
+
+#clientSearch {
+    width: 90%;
+}

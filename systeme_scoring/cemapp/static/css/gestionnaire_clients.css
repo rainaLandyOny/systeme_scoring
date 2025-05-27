@@ -15,7 +15,7 @@
     border-radius: 4px;
     background-color: #e3e4e6;
     color: #333;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
 }
 
 #searchInput::placeholder {
@@ -24,7 +24,6 @@
 
 #searchInput:focus {
     border-color: #e50005;
-    box-shadow: 0px 0px 8px rgba(229, 0, 5, 0.3);
     outline: none;
 }
 
@@ -35,7 +34,6 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
@@ -76,13 +74,17 @@
 
 .action-bar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    /* barre recherche à gauche, bouton à droite */
+    align-items: center;
+    /* pour bien aligner verticalement */
     margin-bottom: 1rem;
 }
 
 #addClientButton {
     background-color: #e50005;
     color: white;
+    width: auto;
     padding: 0.6em 1.2em;
     border: none;
     border-radius: 4px;
@@ -100,16 +102,103 @@
 /* Général */
 
 body {
-    font-family: Arial, sans-serif;
-    color: #333;
-    background-color: #e3e4e6;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
     margin: 0;
     padding: 0;
 }
 
-.container {
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    min-width: 800px;
+}
+
+.styled-table thead tr {
+    background-color: #d90000;
+    /* Rouge CEM */
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.styled-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.table-wrapper {
+    background: #ffffff;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    overflow-x: auto;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.page-title {
+    text-align: left;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #d90000;
+    align-self: flex-start;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    /* barre recherche à gauche, bouton à droite */
+    align-items: center;
+    /* pour bien aligner verticalement */
+    margin-bottom: 1rem;
+}
+
+#searchForm {
+    margin: 0;
+    /* annule le margin-bottom précédent */
+    flex-grow: 1;
+    /* la barre de recherche peut prendre toute la place disponible */
+    max-width: 400px;
+    /* limite la largeur max */
+}
+
+#searchInput {
+    width: 100%;
+    /* input prend toute la place du formulaire */
+    padding: 0.5em;
+    font-size: 1em;
+    border: 1px solid #9fa0a2;
+    border-radius: 4px;
+    background-color: #e3e4e6;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+#addClientButton {
+    background-color: #e50005;
+    color: white;
+    padding: 0.6em 1.2em;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: auto;
+    white-space: nowrap;
+    /* petit espace entre la recherche et le bouton */
 }
