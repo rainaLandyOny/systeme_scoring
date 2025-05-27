@@ -2,15 +2,17 @@
 {% load static %}
 
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/simulation_offre.css' %}">
+
 <div class="container" 
      data-interest-rate="{{ sous_type.taux_interet }}" 
      data-min-term="{{ sous_type.duree_min }}" 
      data-max-term="{{ sous_type.duree_max }}" 
      data-min-amount="{{ sous_type.montant_min }}" 
      data-max-amount="{{ sous_type.montant_max }}">
+
     <h1>Simulation de Crédit</h1>
+
     <div class="details">
         <div>
             <p>Nom de l'offre: <span id="offerName">{{ sous_type.nom }}</span></p>
@@ -23,32 +25,32 @@
         </div>
     </div>
 
-    <div class="simulation-inputs">
-        <div class="form-group">
-            <label for="monthlyIncome">Votre revenu mensuel (MGA)</label>
-            <input type="range" id="monthlyIncome" name="monthlyIncome" min="0" max="30000000" value="45719">
-            <span id="incomeValue">45 719 MGA</span>
+    <div class="flex-container">
+        <div class="simulation-inputs">
+            <div class="form-group">
+                <label for="monthlyIncome">Votre revenu mensuel (MGA)</label>
+                <input type="range" id="monthlyIncome" name="monthlyIncome" min="0" max="30000000" value="45719">
+                <span id="incomeValue">45 719 MGA</span>
+            </div>
+
+            <div class="form-group">
+                <label for="loanAmount">Montant du prêt (MGA)</label>
+                <input type="range" id="loanAmount" name="loanAmount" min="{{ sous_type.montant_min }}" max="{{ sous_type.montant_max }}" value="{{ sous_type.montant_min }}">
+                <span id="loanValue">{{ sous_type.montant_min }} MGA</span>
+            </div>
+
+            <div class="form-group">
+                <label for="loanTerm">Durée de l'emprunt (Mois)</label>
+                <input type="range" id="loanTerm" name="loanTerm" min="{{ sous_type.duree_min }}" max="{{ sous_type.duree_max }}" value="{{ sous_type.duree_min }}">
+                <span id="termValue">{{ sous_type.duree_min }} Mois</span>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="loanAmount">Montant du prêt (MGA)</label>
-            <input type="range" id="loanAmount" name="loanAmount" min="{{ sous_type.montant_min }}" max="{{ sous_type.montant_max }}" value="{{ sous_type.montant_min }}">
-            <span id="loanValue">{{ sous_type.montant_min }} MGA</span>
+        <div class="simulation-result">
+            <h2>Résultat de votre simulation</h2>
+            <p>Montant de vos mensualités pendant <span id="monthlyTermResult">{{ sous_type.duree_min }}</span> mois</p>
+            <h3 id="monthlyPayment">Calcul en cours...</h3>
         </div>
-
-        <div class="form-group">
-            <label for="loanTerm">Durée de l'emprunt (Mois)</label>
-            <input type="range" id="loanTerm" name="loanTerm" min="{{ sous_type.duree_min }}" max="{{ sous_type.duree_max }}" value="{{ sous_type.duree_min }}">
-            <span id="termValue">{{ sous_type.duree_min }} Mois</span>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="simulation-result">
-        <h2>Résultat de votre simulation</h2>
-        <p>Montant de vos mensualités pendant <span id="monthlyTermResult">{{ sous_type.duree_min }}</span> mois</p>
-        <h3 id="monthlyPayment">Calcul en cours...</h3>
     </div>
 </div>
 

@@ -2,29 +2,22 @@
 {% load static %}
 
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/info_offre.css' %}">
-<div id="content">
-    <div id="offre_credit">
+
+<div id="offre_credit">
+    <div class="credit-row">
         {% for type_credit in type_credits %}
-        <div class="type-credit-section">
-            <h2>{{ type_credit.nom }}</h2>
-            <p>{{ type_credit.description }}</p>
+        <div class="credit-card">
+            <h3 class="credit-title">{{ type_credit.nom|upper }}</h3>
             {% for sous_type in type_credit.soustypecredit_set.all %}
             <div class="offre">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">{{ sous_type.nom }}</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">
-                        {{ sous_type.montant_min }} à {{ sous_type.montant_max }}<small class="text-muted fw-light"> MGA</small>
-                    </h1>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>Durée du prêt: entre {{ sous_type.duree_min }} et {{ sous_type.duree_max }} mois</li>
-                        <li>Taux mensuel: {{sous_type.taux_interet}} %</li>
-                        <li>{{ sous_type.description }}</li>
-                    </ul>
-                </div>
+                <p class="sous-type">{{ sous_type.nom }}</p>
+                <p class="montant">
+                    {{ sous_type.montant_min }}.00 à {{ sous_type.montant_max }}.00 <span class="mga">MGA</span>
+                </p>
+                <p class="info">Durée du prêt: entre {{ sous_type.duree_min }} et {{ sous_type.duree_max }} mois</p>
+                <p class="info">Taux mensuel: {{ sous_type.taux_interet }} %</p>
+
                 <a href="{% url 'simulation_offre' sous_type.id %}">
                     <div class="overlay">
                         Faire une simulation
@@ -34,36 +27,6 @@
             {% endfor %}
         </div>
         {% endfor %}
-    </div>
-
-    <div id="document_credit">
-        <h3>Documents nécessaires</h3>
-        <table>
-            <tr>
-                <th>Nouveau Client</th>
-                <th>Ancien Client</th>
-            </tr>
-            <tr>
-                <td>
-                    <ul>
-                        {% for document in documents %}
-                            {% if document.client_status == 'Nouveau' %}
-                                <li>{{ document.nom }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        {% for document in documents %}
-                            {% if document.client_status == 'Ancien' %}
-                                <li>{{ document.nom }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        </table>
     </div>
 </div>
 {% endblock %}

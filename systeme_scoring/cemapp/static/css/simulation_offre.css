@@ -1,15 +1,13 @@
-/* Style général */
-
 body {
     font-family: Arial, sans-serif;
-    color: #333;
     background-color: #f4f4f9;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
 .container {
-    max-width: 80%;
+    max-width: 90%;
     margin: auto;
     padding: 20px;
     background-color: #fff;
@@ -17,18 +15,11 @@ body {
     border-radius: 8px;
 }
 
-
-/* En-tête de la page */
-
 h1 {
-    font-size: 2em;
-    color: #003366;
     text-align: center;
+    color: #003366;
     margin-bottom: 20px;
 }
-
-
-/* Section des détails */
 
 .details {
     display: flex;
@@ -50,11 +41,16 @@ h1 {
     color: #333;
 }
 
-
-/* Section des entrées de simulation */
+.flex-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
 
 .simulation-inputs {
-    margin-top: 20px;
+    flex: 2;
+    min-width: 300px;
 }
 
 .form-group {
@@ -70,24 +66,13 @@ h1 {
 
 input[type="range"] {
     width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
     height: 8px;
     background-color: #ddd;
     border-radius: 5px;
     outline: none;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    background-color: #ff6600;
-    cursor: pointer;
-    border-radius: 50%;
-}
-
+input[type="range"]::-webkit-slider-thumb,
 input[type="range"]::-moz-range-thumb {
     width: 16px;
     height: 16px;
@@ -99,15 +84,21 @@ input[type="range"]::-moz-range-thumb {
 span {
     font-size: 0.9em;
     color: #444;
-    margin-top: 5px;
     display: inline-block;
+    margin-top: 5px;
 }
 
-
-/* Résultat de la simulation */
-
 .simulation-result {
-    margin-top: 30px;
+    position: sticky;
+    top: 100px;
+    min-width: 300px;
+    max-width: 400px;
+    flex: 1;
+    padding: 20px;
+    background-color: #fefefe;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    height: fit-content;
     text-align: center;
 }
 
